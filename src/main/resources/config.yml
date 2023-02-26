@@ -1,0 +1,25 @@
+###############################
+#   IndustrialStacking v1.0   #
+#        by Conorsmine        #
+###############################
+# This config contains all valid, stackable, machines.
+# Each machine can be configured:
+# "maxStackSize" indicates the max amount of machines that
+# can be stacked. Not including the original machine itself.
+# Use 0, to disable the ability to stack.
+# Use -1, for infinite stacking.
+#
+# Any further information is provided by the config
+# Note: If a machine has a larger stack than allowed,
+# its increase is clamped, but breaking the machine still provides
+# all of its machines.
+# Therefore, changing the config will not delete machines.
+###############################
+
+# Increases the work speed.
+Laser_Drill:
+  maxStackSize: -1
+
+# Each machine increases the amount of output by 1
+Laser_Base:
+  maxStackSize: -1

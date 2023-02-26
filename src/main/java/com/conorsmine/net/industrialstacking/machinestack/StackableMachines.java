@@ -1,0 +1,74 @@
+package com.conorsmine.net.industrialstacking.machinestack;
+
+import com.conorsmine.net.industrialstacking.machinestack.machines.LaserDrill;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.jetbrains.annotations.Nullable;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
+
+public enum StackableMachines {
+
+    LASER_DRILL(Material.valueOf("INDUSTRIALFOREGOING_LASER_DRILL"), LaserDrill.class, "Laser_Drill");
+
+
+
+    private static final Map<Material, StackableMachines> matMap = new HashMap<>();
+    private static final Set<String> matNameSet = new HashSet<>();  // A set to quickly check if a material is registered
+    static {
+        for (StackableMachines stackableMachine : values()) {
+            matMap.put(stackableMachine.material, stackableMachine);
+            matNameSet.add(stackableMachine.material.name().toUpperCase(Locale.ROOT));
+        }
+    }
+
+    private final Material material;
+    private final Class<? extends MachineStack> clazz;
+    private final String configName;
+
+    /**
+     * @param material {@link org.bukkit.Material}
+     * @param clazz Class of the stackable machine
+     * @param configName Key identifying {@link org.bukkit.configuration.ConfigurationSection}
+     */
+    StackableMachines(Material material, Class<? extends MachineStack> clazz, String configName) {
+        this.material = material;
+        this.clazz = clazz;
+        this.configName = configName;
+    }
+
+    @Nullable
+    public MachineStack createNew(Block machineBlock) {
+        MachineStack machineStack = null;
+        try {
+            machineStack = clazz.getConstructor(Block.class).newInstance(machineBlock);
+        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+
+        return machineStack;
+    }
+
+    public Material getMaterial() {
+        return material;
+    }
+
+    public Class<? extends MachineStack> getClazz() {
+        return clazz;
+    }
+
+    public String getConfigName() {
+        return configName;
+    }
+
+    @Nullable
+    public static StackableMachines machineFromType(Material material) {
+        return matMap.get(material);
+    }
+
+    public static Set<String> getMatNameSet() {
+        return matNameSet;
+    }
+}
