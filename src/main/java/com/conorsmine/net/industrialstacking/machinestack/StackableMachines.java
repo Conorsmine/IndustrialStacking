@@ -1,5 +1,6 @@
 package com.conorsmine.net.industrialstacking.machinestack;
 
+import com.conorsmine.net.industrialstacking.machinestack.machines.LaserBase;
 import com.conorsmine.net.industrialstacking.machinestack.machines.LaserDrill;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -10,7 +11,8 @@ import java.util.*;
 
 public enum StackableMachines {
 
-    LASER_DRILL(Material.valueOf("INDUSTRIALFOREGOING_LASER_DRILL"), LaserDrill.class, "Laser_Drill");
+    LASER_DRILL(Material.valueOf("INDUSTRIALFOREGOING_LASER_DRILL"), LaserDrill.class, "Laser_Drill"),
+    LASER_BASE (Material.valueOf("INDUSTRIALFOREGOING_LASER_BASE"), LaserBase.class, "Laser_Base");
 
 
 

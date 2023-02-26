@@ -11,11 +11,13 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class MachineStack {
 
+    private final Block block;
     private final Material machineType;
     private final NBTTileEntity tileEntity;
     private int stackAmount = 1;
 
     public MachineStack(@NotNull Block tileEntity, @NotNull Material machineType) {
+        this.block = tileEntity;
         this.tileEntity = new NBTTileEntity(tileEntity.getState());
         this.machineType = machineType;
     }
@@ -25,6 +27,13 @@ public abstract class MachineStack {
      */
     public void tick() {
         tickMachine();
+    }
+
+    /**
+     * @return The block of the machine
+     */
+    public Block getBlock() {
+        return block;
     }
 
     /**

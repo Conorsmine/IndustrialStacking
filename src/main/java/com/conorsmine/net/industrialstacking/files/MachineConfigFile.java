@@ -1,5 +1,6 @@
-package com.conorsmine.net.industrialstacking;
+package com.conorsmine.net.industrialstacking.files;
 
+import com.conorsmine.net.industrialstacking.IndustrialStacking;
 import com.conorsmine.net.industrialstacking.machinestack.StackableMachines;
 
 import java.util.HashMap;
@@ -11,7 +12,7 @@ public class MachineConfigFile {
     private final IndustrialStacking pl;
     private final Map<String, Integer> maxStackSizeMap = new HashMap<>();
 
-    MachineConfigFile(IndustrialStacking pl) {
+    public MachineConfigFile(IndustrialStacking pl) {
         this.pl = pl;
     }
 

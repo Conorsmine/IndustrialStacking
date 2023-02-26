@@ -63,6 +63,7 @@ public class StackMachineAction {
         if (maxStackSize != -1 && machineStack.getStackAmount() >= maxStackSize) { stackLimitReachedMsg(); return; }
 
         machineStack.addMachineToStack();
+        saveMachineToFile(machineStack);
         removeItem();
     }
 
@@ -73,6 +74,7 @@ public class StackMachineAction {
         final MachineStack machineStack = machineEnums.createNew(block);
         if (machineStack == null) return;
         pl.getStackManager().put(block.getLocation(), machineStack);
+        saveMachineToFile(machineStack);
         removeItem();
     }
 
@@ -88,5 +90,9 @@ public class StackMachineAction {
         p.sendMessage(String.format("%s §3Stack limit of §l§b%d §r§3reached!§r",
                 pl.getPrefix(),
                 pl.getMachineConfigFile().getMaxStackSizeMap().get(machineEnums.getConfigName())));
+    }
+
+    private void saveMachineToFile(MachineStack machineStack) {
+        pl.getMachineSaveFile().saveMachineStack(machineStack);
     }
 }

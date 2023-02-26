@@ -1,6 +1,8 @@
 package com.conorsmine.net.industrialstacking;
 
 import com.conorsmine.net.industrialstacking.cmd.ReloadCmd;
+import com.conorsmine.net.industrialstacking.files.MachineConfigFile;
+import com.conorsmine.net.industrialstacking.files.MachineSaveFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
 @SuppressWarnings("unused")
@@ -9,11 +11,11 @@ public final class IndustrialStacking extends JavaPlugin {
     private final String prefix = "§c§l[§eIndustrialStacking§c]§r ";
     private StackManager stackManager;
     private MachineConfigFile machineConfigFile;
+    private MachineSaveFile machineSaveFile;
 
     @Override
     public void onEnable() {
         initConfig();
-        machineConfigFile = new MachineConfigFile(this).initConfig();
         stackManager = new StackManager(this);
         getServer().getPluginManager().registerEvents(new EvenListener(this), this);
         getCommand("reloadStackables").setExecutor(new ReloadCmd(this));
@@ -25,6 +27,8 @@ public final class IndustrialStacking extends JavaPlugin {
 
     private void initConfig() {
         this.saveDefaultConfig();
+        machineConfigFile = new MachineConfigFile(this).initConfig();
+        machineSaveFile = new MachineSaveFile(this);
     }
 
     public String getPrefix() {
@@ -37,5 +41,9 @@ public final class IndustrialStacking extends JavaPlugin {
 
     public MachineConfigFile getMachineConfigFile() {
         return machineConfigFile;
+    }
+
+    public MachineSaveFile getMachineSaveFile() {
+        return machineSaveFile;
     }
 }
