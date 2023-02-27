@@ -1,5 +1,6 @@
 package com.conorsmine.net.industrialstacking.machinestack;
 
+import com.conorsmine.net.industrialstacking.IndustrialStacking;
 import de.tr7zw.nbtapi.NBTTileEntity;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -11,12 +12,14 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class MachineStack {
 
+    private final IndustrialStacking pl;
     private final Block block;
     private final Material machineType;
     private final NBTTileEntity tileEntity;
     private int stackAmount = 1;
 
-    public MachineStack(@NotNull Block tileEntity, @NotNull Material machineType) {
+    public MachineStack(@NotNull IndustrialStacking plugin, @NotNull Block tileEntity, @NotNull Material machineType) {
+        this.pl = plugin;
         this.block = tileEntity;
         this.tileEntity = new NBTTileEntity(tileEntity.getState());
         this.machineType = machineType;
@@ -27,6 +30,10 @@ public abstract class MachineStack {
      */
     public void tick() {
         tickMachine();
+    }
+
+    public IndustrialStacking getPlugin() {
+        return pl;
     }
 
     /**
@@ -88,6 +95,14 @@ public abstract class MachineStack {
     public long getMachineStackPower() {
         // Add 1, as the machine itself counts too
         return getRegularMachinePower() * (getStackAmount() + 1);
+    }
+
+    /**
+     * Removes this machine stack.
+     */
+    public void removeMachineStack() {
+        pl.getStackManager().remove(getBlock().getLocation());
+        pl.getMachineSaveFile().removeMachineStack(this);
     }
 
     /**

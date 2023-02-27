@@ -1,5 +1,6 @@
 package com.conorsmine.net.industrialstacking.machinestack.machines;
 
+import com.conorsmine.net.industrialstacking.IndustrialStacking;
 import com.conorsmine.net.industrialstacking.machinestack.MachineStack;
 import com.conorsmine.net.industrialstacking.machinestack.StackableMachines;
 import de.tr7zw.nbtapi.NBTCompoundList;
@@ -7,11 +8,12 @@ import de.tr7zw.nbtapi.iface.ReadWriteNBT;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 public class LaserDrill extends MachineStack {
 
-    public LaserDrill(Block tileEntity) {
-        super(tileEntity, StackableMachines.LASER_DRILL.getMaterial());
+    public LaserDrill(@NotNull IndustrialStacking plugin, @NotNull Block tileEntity) {
+        super(plugin, tileEntity, StackableMachines.LASER_DRILL.getMaterial());
     }
 
     @Override

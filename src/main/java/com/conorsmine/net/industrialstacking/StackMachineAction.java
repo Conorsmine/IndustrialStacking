@@ -71,7 +71,7 @@ public class StackMachineAction {
         if (machineEnums == null) return;
         if (maxStackSize == null || maxStackSize == 0) { cantStackMachineMsg(); return; }
 
-        final MachineStack machineStack = machineEnums.createNew(block);
+        final MachineStack machineStack = machineEnums.createNew(pl, block);
         if (machineStack == null) return;
         pl.getStackManager().put(block.getLocation(), machineStack);
         saveMachineToFile(machineStack);

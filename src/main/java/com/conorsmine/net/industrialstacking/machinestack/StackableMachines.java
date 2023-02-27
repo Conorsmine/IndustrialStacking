@@ -1,5 +1,6 @@
 package com.conorsmine.net.industrialstacking.machinestack;
 
+import com.conorsmine.net.industrialstacking.IndustrialStacking;
 import com.conorsmine.net.industrialstacking.machinestack.machines.LaserBase;
 import com.conorsmine.net.industrialstacking.machinestack.machines.LaserDrill;
 import org.bukkit.Material;
@@ -41,10 +42,10 @@ public enum StackableMachines {
     }
 
     @Nullable
-    public MachineStack createNew(Block machineBlock) {
+    public MachineStack createNew(IndustrialStacking plugin, Block machineBlock) {
         MachineStack machineStack = null;
         try {
-            machineStack = clazz.getConstructor(Block.class).newInstance(machineBlock);
+            machineStack = clazz.getConstructor(IndustrialStacking.class, Block.class).newInstance(plugin, machineBlock);
         } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }

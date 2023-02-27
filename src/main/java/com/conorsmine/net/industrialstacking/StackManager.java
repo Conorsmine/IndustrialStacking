@@ -35,12 +35,7 @@ public final class StackManager extends ConcurrentHashMap<Location, MachineStack
             final MachineStack machineStack = mapEntries.getValue();
             final Location machineLoc = mapEntries.getKey();
 
-            if (!isValidBlock(machineStack, machineLoc)) {
-                this.remove(machineLoc);
-                pl.getMachineSaveFile().removeMachineStack(machineStack);
-                continue;
-            }
-
+            if (!isValidBlock(machineStack, machineLoc)) { machineStack.removeMachineStack(); continue; }
             machineStack.tick();
         }
     }

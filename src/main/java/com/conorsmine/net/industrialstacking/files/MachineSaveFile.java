@@ -127,7 +127,7 @@ public class MachineSaveFile {
         if (machineBlock == null || !machineBlock.getType().name().equals(material.name())) return null;
         final StackableMachines stackableMachinesEnum = StackableMachines.machineFromName(material.name());
         if (stackableMachinesEnum == null) return null;
-        final MachineStack machineStack = stackableMachinesEnum.createNew(machineBlock);
+        final MachineStack machineStack = stackableMachinesEnum.createNew(pl, machineBlock);
         if (machineStack == null) return null;
         machineStack.setMachineStackAmount(stackSize);
         return machineStack;
