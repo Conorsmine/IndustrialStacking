@@ -77,8 +77,9 @@ public abstract class MachineStack {
      */
     public ItemStack getMachineItemStack() {
         // Todo:
-        //  This doesn't work correctly, idk why
-        return new ItemStack(machineType, getStackAmount());
+        //  This may cause issues, idk yet, needs further testing!
+        final int machineId = machineType.getId() + 3907;
+        return new ItemStack(machineId, getStackAmount());
     }
 
     /**
