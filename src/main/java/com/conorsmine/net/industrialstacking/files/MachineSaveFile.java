@@ -159,7 +159,7 @@ public class MachineSaveFile {
         final String key = machineStack.getMachineType().name();
         final JSONArray machineTypeArr = (JSONArray) jsonFile.get(key);
         final int machineIndex = getSameMachineIndex(machineStack.getBlock().getLocation(), machineTypeArr);
-        System.out.println(machineIndex);
+        if (machineIndex >= machineTypeArr.size()) return;
         machineTypeArr.remove(machineIndex);
         jsonFile.put(key, machineTypeArr);
         save();
