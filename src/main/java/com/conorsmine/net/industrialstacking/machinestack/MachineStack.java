@@ -101,4 +101,12 @@ public abstract class MachineStack {
      * Function which will run every tick, normally it will be to increase the power input of the machine.
      */
     public abstract void tickMachine();
+
+    @Override
+    public String toString() {
+        return "MachineStack{" +
+                "machineType=" + machineType +
+                ", stackAmount=" + stackAmount +
+                '}';
+    }
 }

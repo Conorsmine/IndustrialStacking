@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-final class StackManager extends ConcurrentHashMap<Location, MachineStack> {
+public final class StackManager extends ConcurrentHashMap<Location, MachineStack> {
 
     private final IndustrialStacking pl;
 

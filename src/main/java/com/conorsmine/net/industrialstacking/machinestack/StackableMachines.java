@@ -70,6 +70,16 @@ public enum StackableMachines {
         return matMap.get(material);
     }
 
+    @Nullable
+    public static StackableMachines machineFromName(String matName) {
+        if (!matNameSet.contains(matName.toUpperCase(Locale.ROOT))) return null;
+
+        for (StackableMachines value : values()) {
+            if (value.getMaterial().name().equals(matName)) return value;
+        }
+        return null;
+    }
+
     public static Set<String> getMatNameSet() {
         return matNameSet;
     }

@@ -2,10 +2,13 @@ package com.conorsmine.net.industrialstacking.files;
 
 import com.conorsmine.net.industrialstacking.IndustrialStacking;
 import com.conorsmine.net.industrialstacking.machinestack.MachineStack;
+import com.conorsmine.net.industrialstacking.machinestack.StackableMachines;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -16,7 +19,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 @SuppressWarnings("unchecked")
 public class MachineSaveFile {
@@ -73,6 +78,59 @@ public class MachineSaveFile {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * @return Map of the JSON file
+     */
+    public Map<Material, Set<MachineSaveWrapper>> deserialize() {
+        final Map<Material, Set<MachineSaveWrapper>> machineMap = new HashMap<>();
+
+        for (Object o : jsonFile.keySet()) {
+            final Material material = Material.matchMaterial(((String) o));
+            if (material == null) continue;
+
+            final Set<MachineSaveWrapper> machines = new HashSet<>();
+            final JSONArray machineTypeArr = (JSONArray) jsonFile.get(o);
+
+            for (Object o1 : machineTypeArr)
+                machines.add(new MachineSaveWrapper(((JSONObject) o1)));
+
+            machineMap.put(material, machines);
+        }
+        return machineMap;
+    }
+
+    /**
+     * @return Map structured after {@link com.conorsmine.net.industrialstacking.StackManager}
+     */
+    public Map<Location, MachineStack> mapDeserializedData() {
+        final Map<Location, MachineStack> map = new HashMap<>();
+        for (Map.Entry<Material, Set<MachineSaveWrapper>> materialSetEntry : deserialize().entrySet()) {
+            final Material material = materialSetEntry.getKey();
+            final Set<MachineSaveWrapper> machineSaveWrappers = materialSetEntry.getValue();
+
+            for (MachineSaveWrapper saveWrapper : machineSaveWrappers) {
+                final Location machineLocation = saveWrapper.getMachineLocation();
+
+                final MachineStack machineStack = getMachineStack(machineLocation, material, saveWrapper.getMachineStackSize());
+                if (machineStack == null) continue;
+                map.put(machineLocation, machineStack);
+            }
+        }
+
+        return map;
+    }
+
+    private MachineStack getMachineStack(final Location location, final Material material, final int stackSize) {
+        final Block machineBlock = location.getBlock();
+        if (machineBlock == null || !machineBlock.getType().name().equals(material.name())) return null;
+        final StackableMachines stackableMachinesEnum = StackableMachines.machineFromName(material.name());
+        if (stackableMachinesEnum == null) return null;
+        final MachineStack machineStack = stackableMachinesEnum.createNew(machineBlock);
+        if (machineStack == null) return null;
+        machineStack.setMachineStackAmount(stackSize);
+        return machineStack;
     }
 
     public void reload() {
