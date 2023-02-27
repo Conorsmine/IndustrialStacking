@@ -37,6 +37,7 @@ public final class StackManager extends ConcurrentHashMap<Location, MachineStack
 
             if (!isValidBlock(machineStack, machineLoc)) {
                 this.remove(machineLoc);
+                pl.getMachineSaveFile().removeMachineStack(machineStack);
                 continue;
             }
 

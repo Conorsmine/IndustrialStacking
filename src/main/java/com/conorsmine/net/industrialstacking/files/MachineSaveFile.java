@@ -155,6 +155,16 @@ public class MachineSaveFile {
         save();
     }
 
+    public void removeMachineStack(final MachineStack machineStack) {
+        final String key = machineStack.getMachineType().name();
+        final JSONArray machineTypeArr = (JSONArray) jsonFile.get(key);
+        final int machineIndex = getSameMachineIndex(machineStack.getBlock().getLocation(), machineTypeArr);
+        System.out.println(machineIndex);
+        machineTypeArr.remove(machineIndex);
+        jsonFile.put(key, machineTypeArr);
+        save();
+    }
+
     /**
      * Tries to find the saved JSON for that particular machine.
      * @param location The location of the machine stack.

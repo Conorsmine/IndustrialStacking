@@ -64,6 +64,7 @@ public class EvenListener implements Listener {
     private void dropStackMachineItems(Location location) {
         if (!pl.getStackManager().containsKey(location)) return;
         final MachineStack machineStack = pl.getStackManager().get(location);
+        pl.getMachineSaveFile().removeMachineStack(machineStack);
         location.getWorld().dropItem(location, machineStack.getMachineItemStack());
     }
 }
