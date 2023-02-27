@@ -4,6 +4,7 @@ import com.conorsmine.net.industrialstacking.IndustrialStacking;
 import com.conorsmine.net.industrialstacking.machinestack.MachineStack;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -83,12 +84,15 @@ public class MachineSaveFile {
         final Location location = machineStack.getBlock().getLocation();
         final String machineTypeName = machineStack.getMachineType().name();
         final JSONArray machineTypeArr = (JSONArray) jsonFile.getOrDefault(machineTypeName, new JSONArray());
-        final Tuple machineTuple = getSameMachine(location, machineTypeArr);
-        final JSONObject machineJson = machineTuple.getJsonObject();
+        final JSONObject machineJson = new JSONObject();
+        final int machineIndex = getSameMachineIndex(location, machineTypeArr);
 
         machineJson.put("Location", createLocationJson(location));
         machineJson.put("StackSize", machineStack.getStackAmount());
-        machineTypeArr.set(machineTuple.getIndex(), machineJson);
+        if (machineIndex == machineTypeArr.size())
+            machineTypeArr.add(machineJson);
+        else
+            machineTypeArr.set(machineIndex, machineJson);
         jsonFile.put(machineTypeName, machineTypeArr);
         save();
     }
@@ -97,49 +101,34 @@ public class MachineSaveFile {
      * Tries to find the saved JSON for that particular machine.
      * @param location The location of the machine stack.
      * @param machineTypeArr The saved JSON array for that type of machine.
-     * @return JSONObject of the machine, a new JSONObject if the machine hasn't been saved before.
+     * @return Index of the machineTypeArr it's located at.
      */
-    private Tuple getSameMachine(final Location location, final JSONArray machineTypeArr) {
+    private int getSameMachineIndex(final Location location, final JSONArray machineTypeArr) {
         for (int i = 0; i < machineTypeArr.size(); i++) {
             final JSONObject machineJson = ((JSONObject) machineTypeArr.get(i));
             final JSONObject machineLocation = (JSONObject) machineJson.get("Location");
-
-            if (((long) machineLocation.get("x")) != location.getBlockX()
-                    || ((long) machineLocation.get("y")) != location.getBlockY()
-                    ||((long) machineLocation.get("z")) != location.getBlockZ()) continue;
-
-            return new Tuple(new JSONObject(), i);
+            if (isSameLocation(location, machineLocation)) return i;
         }
 
-        return new Tuple(new JSONObject(), machineTypeArr.size());
+        return machineTypeArr.size();
+    }
+
+    private boolean isSameLocation(final Location location, final JSONObject locationJson) {
+        final Location machineLocation = new Location(Bukkit.getWorld(
+                ((String) locationJson.get("world"))),
+                ((Number) locationJson.get("x")).doubleValue(),
+                ((Number) locationJson.get("y")).doubleValue(),
+                ((Number) locationJson.get("z")).doubleValue());
+        return location.equals(machineLocation);
     }
 
     private JSONObject createLocationJson(final Location location) {
         final JSONObject jsonObject = new JSONObject();
+        jsonObject.put("world", location.getWorld().getName());
         jsonObject.put("x", location.getBlockX());
         jsonObject.put("y", location.getBlockY());
         jsonObject.put("z", location.getBlockZ());
 
         return jsonObject;
-    }
-
-
-
-    private class Tuple {
-        private final JSONObject jsonObject;
-        private final int index;
-
-        public Tuple(JSONObject jsonObject, int index) {
-            this.jsonObject = jsonObject;
-            this.index = index;
-        }
-
-        public JSONObject getJsonObject() {
-            return jsonObject;
-        }
-
-        public int getIndex() {
-            return index;
-        }
     }
 }
