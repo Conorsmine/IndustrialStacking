@@ -8,10 +8,10 @@ import de.tr7zw.nbtapi.NBTCompoundList;
 import de.tr7zw.nbtapi.NBTContainer;
 import de.tr7zw.nbtapi.NBTItem;
 import de.tr7zw.nbtapi.iface.ReadWriteNBT;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.inventory.Inventory;
+import org.bukkit.event.EventHandler;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -64,39 +64,109 @@ public class LaserBase extends MachineStack {
         addItemToCompoundList(baseItems);
     }
 
+    /**
+     * Adds the mined item to the inventory of the laser base.
+     * It'll use the first available identical item or empty slot.
+     * @param baseItems Array of items representing the laser base inventory.
+     * @param minedItem The item mined from the base and multiplied by the machine stack.
+     */
     private void addItemsToInventory(ItemStack[] baseItems, ItemStack minedItem) {
-        for (ItemStack baseItem : baseItems) {
-            if (baseItem == null) continue;
-            if (baseItem.getDurability() != minedItem.getDurability()) continue;
-            if (!baseItem.getType().name().equals(minedItem.getType().name())) continue;
-            if (baseItem.getAmount() == baseItem.getMaxStackSize()) continue;
+        for (int i = 0; i < baseItems.length; i++) {
+            if (minedItem.getAmount() <= 0) return;
+            final ItemStack baseItem = baseItems[i];
 
-            // Add items to arr
-            int addAmount = minedItem.getAmount();
-            if ((baseItem.getAmount() + addAmount) > baseItem.getMaxStackSize()) addAmount = (baseItem.getMaxStackSize() - baseItem.getAmount());
-            System.out.println("Add: " + addAmount);
-            baseItem.setAmount(baseItem.getAmount() + addAmount);
-            minedItem.setAmount(minedItem.getAmount() - addAmount);
-            System.out.println("Set: " + minedItem.getAmount());
+            // Add to empty slot
+            if (baseItem == null) {
+                System.out.println("Empty slot: " + i);
+                addItemToEmpty(baseItems, i, minedItem);
+                shouldRecurs(baseItems, minedItem);
+                continue;
+            }
 
-            // Repeat until gone
-            if (minedItem.getAmount() > 0)
-                addItemsToInventory(baseItems, minedItem);
+            // Add to existing item
+            if (!canAdd(baseItem, minedItem)) continue;
+            addItemToItem(baseItem, minedItem);
+            shouldRecurs(baseItems, minedItem);
         }
     }
 
+    private void shouldRecurs(ItemStack[] baseItems, ItemStack minedItem) {
+        if (minedItem.getAmount() > 0)
+            addItemsToInventory(baseItems, minedItem);
+    }
+
+    /**
+     * Adds the amount of the minedItem to the baseItem, until it reaches the {@link ItemStack#getMaxStackSize()}.
+     * The {@link ItemStack#getAmount()} of the minedItem represents how much could not be added.
+     * @param baseItem Item of the laser base.
+     * @param minedItem Item mined by the laser base.
+     */
+    private void addItemToItem(ItemStack baseItem, ItemStack minedItem) {
+        int minedItemAmount = minedItem.getAmount();
+        int addAmount = minedItemAmount;
+        if ((baseItem.getAmount() + addAmount) > baseItem.getMaxStackSize()) addAmount = (baseItem.getMaxStackSize() - baseItem.getAmount());
+        baseItem.setAmount(baseItem.getAmount() + addAmount);
+        minedItem.setAmount(minedItemAmount - addAmount);
+    }
+
+    /**
+     * Adds the minedItem to the empty slot of the laser base, until it reaches the {@link ItemStack#getMaxStackSize()}.
+     * The {@link ItemStack#getAmount()} of the minedItem represents how much could not be added.
+     * @param baseInv Array of items of the laser base.
+     * @param emptyBaseIndex Index of an empty slot.
+     * @param minedItem Item mined by the laser base.
+     */
+    private void addItemToEmpty(ItemStack[] baseInv, int emptyBaseIndex, ItemStack minedItem) {
+        int minedItemAmount = minedItem.getAmount();
+        int addAmount = minedItemAmount;
+        if (minedItem.getAmount() > minedItem.getMaxStackSize()) addAmount = minedItem.getMaxStackSize();
+        baseInv[emptyBaseIndex] = minedItem.clone();
+        baseInv[emptyBaseIndex].setAmount(addAmount);
+        minedItem.setAmount(minedItemAmount - addAmount);
+    }
+
+    /**
+     * @param baseItem Item of the laser base.
+     * @param minedItem Item mined by the laser base.
+     * @return True, if both are the same and the baseItem isn't at its max stack size.
+     */
+    private boolean canAdd(ItemStack baseItem, ItemStack minedItem) {
+        if (baseItem.getDurability() != minedItem.getDurability()) return false;
+        if (!baseItem.getType().name().equals(minedItem.getType().name())) return false;
+        if (baseItem.getAmount() == baseItem.getMaxStackSize()) return false;
+        return true;
+    }
+
+    /**
+     * @param baseInv Adds the calculated inventory of the laser base to the NBT of its {@link de.tr7zw.nbtapi.NBTTileEntity}.
+     */
     private void addItemToCompoundList(final ItemStack[] baseInv) {
-        NBTCompoundList baseInvCompoundList = getNBTItemList();
+        NBTCompoundList originalBaseInvCompoundList = getNBTItemList();
+        NBTCompound[] modifiedCompounds = new NBTCompound[baseInv.length];
+        for (int i = 0; i < originalBaseInvCompoundList.size(); i++)
+            modifiedCompounds[i] = new NBTContainer(originalBaseInvCompoundList.get(i).toString());
+        originalBaseInvCompoundList.clear();
 
         for (int i = 0; i < baseInv.length; i++) {
             final ItemStack invItem = baseInv[i];
             if (invItem == null || invItem.getType() == Material.AIR) continue;
 
-            final ReadWriteNBT itemNBT = baseInvCompoundList.get(i);
-            itemNBT.setInteger("Count", invItem.getAmount());
+            // Note to future me:
+            // The "Slot" tag is VERY important if you want to add an item to an array!
+            NBTContainer itemNBT = NBTItem.convertItemtoNBT(invItem);
+            itemNBT.setInteger("Slot", i);
+            modifiedCompounds[i] = itemNBT;
+        }
+
+        for (NBTCompound modifiedCompound : modifiedCompounds) {
+            if (modifiedCompound == null || !modifiedCompound.hasTag("id")) continue;
+            originalBaseInvCompoundList.addCompound(modifiedCompound);
         }
     }
 
+    /**
+     * @return The {@link NBTCompoundList} representing the laser bases inventory.
+     */
     private NBTCompoundList getNBTItemList() {
         return getMachineTile().getCompound("outItems").getCompoundList("Items");
     }
