@@ -32,10 +32,6 @@ public abstract class MachineStack {
         tickMachine();
     }
 
-    public IndustrialStacking getPlugin() {
-        return pl;
-    }
-
     /**
      * @return The block of the machine
      */
@@ -90,28 +86,12 @@ public abstract class MachineStack {
     }
 
     /**
-     * @return The amount of power required by the machine stack.
-     */
-    public long getMachineStackPower() {
-        // Add 1, as the machine itself counts too
-        return getRegularMachinePower() * (getStackAmount() + 1);
-    }
-
-    /**
      * Removes this machine stack.
      */
     public void removeMachineStack() {
         pl.getStackManager().remove(getBlock().getLocation());
         pl.getMachineSaveFile().removeMachineStack(this);
     }
-
-    /**
-     * To increase the machines speed, change the amount of energy the machine
-     * can input. To calculate it correctly though, a value is needed, before
-     * all other machines increase the power input.
-     * @return Power input, before recalculation
-     */
-    public abstract long getRegularMachinePower();
 
     /**
      * Function which will run every tick, normally it will be to increase the power input of the machine.
