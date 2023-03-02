@@ -1,4 +1,4 @@
-package com.conorsmine.net.industrialstacking.machinestack.machines;
+package com.conorsmine.net.industrialstacking.machinestack.industrialforegoing.machines;
 
 import com.conorsmine.net.industrialstacking.IndustrialStacking;
 import com.conorsmine.net.industrialstacking.machinestack.MachineStack;
@@ -7,16 +7,14 @@ import de.tr7zw.nbtapi.NBTCompound;
 import de.tr7zw.nbtapi.NBTCompoundList;
 import de.tr7zw.nbtapi.NBTContainer;
 import de.tr7zw.nbtapi.NBTItem;
-import de.tr7zw.nbtapi.iface.ReadWriteNBT;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.event.EventHandler;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LaserBase extends MachineStack {
 
@@ -26,12 +24,6 @@ public class LaserBase extends MachineStack {
     public LaserBase(@NotNull IndustrialStacking plugin, @NotNull Block tileEntity) {
         super(plugin, tileEntity, StackableMachines.LASER_BASE.getMaterial());
         this.baseInvPrev = getBaseItems();
-    }
-
-    @Override
-    public long getRegularMachinePower() {
-        // Doesn't use energy, so ignore it
-        return 0;
     }
 
     @Override
