@@ -1,8 +1,9 @@
 package com.conorsmine.net.industrialstacking.machinestack;
 
 import com.conorsmine.net.industrialstacking.IndustrialStacking;
-import com.conorsmine.net.industrialstacking.machinestack.machines.LaserBase;
-import com.conorsmine.net.industrialstacking.machinestack.machines.LaserDrill;
+import com.conorsmine.net.industrialstacking.machinestack.industrialforegoing.machines.LaserBase;
+import com.conorsmine.net.industrialstacking.machinestack.industrialforegoing.machines.LaserDrill;
+import com.conorsmine.net.industrialstacking.machinestack.industrialforegoing.machines.MobDuplicator;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.jetbrains.annotations.Nullable;
@@ -12,8 +13,10 @@ import java.util.*;
 
 public enum StackableMachines {
 
-    LASER_DRILL(Material.valueOf("INDUSTRIALFOREGOING_LASER_DRILL"), LaserDrill.class, "Laser_Drill"),
-    LASER_BASE (Material.valueOf("INDUSTRIALFOREGOING_LASER_BASE"), LaserBase.class, "Laser_Base");
+    LASER_DRILL     (Material.valueOf("INDUSTRIALFOREGOING_LASER_DRILL"), LaserDrill.class, "laser_drill"),
+    LASER_BASE      (Material.valueOf("INDUSTRIALFOREGOING_LASER_BASE"), LaserBase.class, "laser_base"),
+    MOB_DUPLICATOR  (Material.valueOf("INDUSTRIALFOREGOING_MOB_DUPLICATOR"), MobDuplicator.class, "mob_duplicator")
+    ;
 
 
 
@@ -26,9 +29,12 @@ public enum StackableMachines {
         }
     }
 
+    /**
+     * This value isn't only for the "config.yml" file of the plugin, but also for the config file of the mod itself.
+     */
+    private final String configName;
     private final Material material;
     private final Class<? extends MachineStack> clazz;
-    private final String configName;
 
     /**
      * @param material {@link org.bukkit.Material}
