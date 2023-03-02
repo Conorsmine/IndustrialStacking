@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class MobDuplicator extends MachineStack implements Powerable {
     public MobDuplicator(@NotNull IndustrialStacking plugin, @NotNull Block tileEntity) {
-        super(plugin, tileEntity, StackableMachines.MOB_DUPLICATOR.getMaterial());
+        super(plugin, tileEntity, StackableMachines.MOB_DUPLICATOR);
     }
 
     @Override
@@ -20,7 +20,7 @@ public class MobDuplicator extends MachineStack implements Powerable {
 
     @Override
     public long getRegularMachinePower() {
-        return ForegoingUtils.getInputPowerForMachine(getMachineTile());
+        return ForegoingUtils.getInputPowerForMachine(this);
     }
 
     @Override

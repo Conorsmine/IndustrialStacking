@@ -1,18 +1,13 @@
-package com.conorsmine.net.industrialstacking.configs.industrialforegoing;
+package com.conorsmine.net.industrialstacking.modconfigs.industrialforegoing;
 
 import com.conorsmine.net.industrialstacking.IndustrialStacking;
-import com.conorsmine.net.industrialstacking.configs.ConfigParser;
+import com.conorsmine.net.industrialstacking.modconfigs.ConfigParser;
 import com.conorsmine.net.industrialstacking.machinestack.StackableMachines;
 
 import java.io.*;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ForegoingConfigParser implements ConfigParser<ForegoingConfigData> {
@@ -35,7 +30,9 @@ public class ForegoingConfigParser implements ConfigParser<ForegoingConfigData> 
 
         try {
             BufferedReader reader = new BufferedReader(new FileReader(foregoingConfig));
+            pl.getLogger().info("§cMAP:");
             parseConfigData(reader.lines().collect(Collectors.toList()));
+            pl.getLogger().info("§c" + configDataMap.toString());
 
             reader.close();
         } catch (IOException e) {
@@ -108,38 +105,15 @@ public class ForegoingConfigParser implements ConfigParser<ForegoingConfigData> 
         return line.replaceAll("\\s", "").replaceAll("[I|B]:", "").replaceAll("=.*", "");
     }
 
-    //    mob_duplicator {
-    //        # A list of blacklisted entities like minecraft:creeper [default: ]
-    //        S:blacklistedEntities <
-    //         >
-    //
-    //        # Set to true to enable exact copy in the Mob Duplicator. [default: false]
-    //        B:enableExactCopy=false
-    //
-    //        # If disabled it will be removed from the game. [default: true]
-    //        B:enabled=true
-    //
-    //        # Energy buffer of a machine [range: 1 ~ 2147483647, default: 50000]
-    //        I:energyBuffer=50000
-    //
-    //        # How much energy needs a machine to work [range: 1 ~ 2147483647, default: 5000]
-    //        I:energyForWork=5000
-    //
-    //        # Energy input rate of a machine [range: 1 ~ 2147483647, default: 80]
-    //        I:energyRate=80
-    //
-    //        # Essence needed based on mob's health (mobHealth*essenceNeeded) [range: 1 ~ 2147483647, default: 12]
-    //        I:essenceNeeded=12
-    //
-    //        # Machine can perform a work action [default: false]
-    //        B:workDisabled=false
-    //    }
-
     @Override
     public Map<StackableMachines, ForegoingConfigData> getConfigMap() {
-        return null;
+        return configDataMap;
     }
 
+    @Override
+    public StackableMachines[] getConfigMachines() {
+        return CONFIG_MACHINES;
+    }
 
 
     private enum DataTypes {

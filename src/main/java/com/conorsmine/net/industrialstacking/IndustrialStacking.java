@@ -3,19 +3,10 @@ package com.conorsmine.net.industrialstacking;
 import com.conorsmine.net.industrialstacking.cmd.ReloadCmd;
 import com.conorsmine.net.industrialstacking.files.MachineConfigFile;
 import com.conorsmine.net.industrialstacking.files.MachineSaveFile;
-import com.conorsmine.net.industrialstacking.files.MachineSaveWrapper;
-import com.conorsmine.net.industrialstacking.machinestack.MachineStack;
-import com.conorsmine.net.industrialstacking.machinestack.StackableMachines;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
+import com.conorsmine.net.industrialstacking.modconfigs.ModConfigManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.io.File;
 
 @SuppressWarnings("unused")
 public final class IndustrialStacking extends JavaPlugin {
@@ -24,6 +15,7 @@ public final class IndustrialStacking extends JavaPlugin {
     private StackManager stackManager;
     private MachineConfigFile machineConfigFile;
     private MachineSaveFile machineSaveFile;
+    private ModConfigManager modConfigManager;
 
     @Override
     public void onEnable() {
@@ -42,6 +34,12 @@ public final class IndustrialStacking extends JavaPlugin {
         this.saveDefaultConfig();
         machineConfigFile = new MachineConfigFile(this).initConfig();
         machineSaveFile = new MachineSaveFile(this);
+        modConfigManager = new ModConfigManager(this);
+    }
+
+    public File getModsConfigDir() {
+        final File rootFile = getServer().getWorldContainer().getParentFile();
+        return new File(rootFile, "config");
     }
 
     public String getPrefix() {
@@ -58,5 +56,9 @@ public final class IndustrialStacking extends JavaPlugin {
 
     public MachineSaveFile getMachineSaveFile() {
         return machineSaveFile;
+    }
+
+    public ModConfigManager getModConfigManager() {
+        return modConfigManager;
     }
 }

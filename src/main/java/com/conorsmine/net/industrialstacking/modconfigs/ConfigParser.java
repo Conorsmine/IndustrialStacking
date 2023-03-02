@@ -1,4 +1,4 @@
-package com.conorsmine.net.industrialstacking.configs;
+package com.conorsmine.net.industrialstacking.modconfigs;
 
 import com.conorsmine.net.industrialstacking.machinestack.StackableMachines;
 
@@ -15,9 +15,13 @@ public interface ConfigParser<T extends ConfigData> {
      */
     void parse();
 
-
     /**
      * @return Map of machines and their {@link ConfigData}.
      */
     Map<StackableMachines, T> getConfigMap();
+
+    /**
+     * @return Array of machines in that config.
+     */
+    StackableMachines[] getConfigMachines();
 }

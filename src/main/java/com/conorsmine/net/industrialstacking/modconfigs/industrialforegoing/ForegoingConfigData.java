@@ -1,6 +1,6 @@
-package com.conorsmine.net.industrialstacking.configs.industrialforegoing;
+package com.conorsmine.net.industrialstacking.modconfigs.industrialforegoing;
 
-import com.conorsmine.net.industrialstacking.configs.ConfigData;
+import com.conorsmine.net.industrialstacking.modconfigs.ConfigData;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -14,15 +14,17 @@ public abstract class MachineStack {
 
     private final IndustrialStacking pl;
     private final Block block;
+    private final StackableMachines machineEnum;
     private final Material machineType;
     private final NBTTileEntity tileEntity;
     private int stackAmount = 1;
 
-    public MachineStack(@NotNull IndustrialStacking plugin, @NotNull Block tileEntity, @NotNull Material machineType) {
+    public MachineStack(@NotNull IndustrialStacking plugin, @NotNull Block tileEntity, @NotNull StackableMachines machineEnum) {
         this.pl = plugin;
         this.block = tileEntity;
         this.tileEntity = new NBTTileEntity(tileEntity.getState());
-        this.machineType = machineType;
+        this.machineEnum = machineEnum;
+        this.machineType = machineEnum.getMaterial();
     }
 
     /**
@@ -45,6 +47,13 @@ public abstract class MachineStack {
      */
     public NBTTileEntity getMachineTile() {
         return this.tileEntity;
+    }
+
+    /**
+     * @return The enum of the machine, as represented via the {@link StackableMachines} enum.
+     */
+    public StackableMachines getMachineEnum() {
+        return machineEnum;
     }
 
     /**
@@ -91,6 +100,10 @@ public abstract class MachineStack {
     public void removeMachineStack() {
         pl.getStackManager().remove(getBlock().getLocation());
         pl.getMachineSaveFile().removeMachineStack(this);
+    }
+
+    public IndustrialStacking getPl() {
+        return pl;
     }
 
     /**

@@ -15,12 +15,12 @@ import java.util.Set;
 public class LaserDrill extends MachineStack implements Powerable {
 
     public LaserDrill(@NotNull IndustrialStacking plugin, @NotNull Block tileEntity) {
-        super(plugin, tileEntity, StackableMachines.LASER_DRILL.getMaterial());
+        super(plugin, tileEntity, StackableMachines.LASER_DRILL);
     }
 
     @Override
     public long getRegularMachinePower() {
-        return ForegoingUtils.getInputPowerForMachine(getMachineTile());
+        return ForegoingUtils.getInputPowerForMachine(this);
     }
 
     @Override

@@ -22,7 +22,7 @@ public class LaserBase extends MachineStack {
     private boolean itemLock = false;   // boolean used to ensure, that the base only increases output once
 
     public LaserBase(@NotNull IndustrialStacking plugin, @NotNull Block tileEntity) {
-        super(plugin, tileEntity, StackableMachines.LASER_BASE.getMaterial());
+        super(plugin, tileEntity, StackableMachines.LASER_BASE);
         this.baseInvPrev = getBaseItems();
     }
 

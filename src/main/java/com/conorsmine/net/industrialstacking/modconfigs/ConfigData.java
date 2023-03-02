@@ -1,4 +1,4 @@
-package com.conorsmine.net.industrialstacking.configs;
+package com.conorsmine.net.industrialstacking.modconfigs;
 
 import java.util.Map;
 
