@@ -3,7 +3,7 @@ version: '${project.version}'
 main: com.conorsmine.net.industrialstacking.IndustrialStacking
 author: Conorsmine
 depend: [NBTAPI]
-api-version: 1.13
+api-version: 1.12
 
 commands:
   reloadStackables:

@@ -14,7 +14,11 @@ public class ForegoingConfigParser implements ConfigParser<ForegoingConfigData> 
 
     private static final String FILE_NAME = "industrialforegoing.cfg";
     private static final StackableMachines[] CONFIG_MACHINES = new StackableMachines[]
-            {StackableMachines.LASER_DRILL, StackableMachines.LASER_BASE, StackableMachines.MOB_DUPLICATOR};
+            { StackableMachines.LASER_DRILL, StackableMachines.LASER_BASE, StackableMachines.HYDRATOR,
+                    StackableMachines.VILLAGER_TRADE_EXCHANGER, StackableMachines.RESOURCEFUL_FURNACE,
+                    StackableMachines.MATERIAL_STONEWORK_FACTORY, StackableMachines.ANIMAL_SEWER,
+                    StackableMachines.TREE_FLUID_EXTRACTOR, StackableMachines.MOB_DUPLICATOR,
+                    StackableMachines.RESOURCE_FISHER, StackableMachines.POTION_BREWER };
 
     private final IndustrialStacking pl;
     private final Map<StackableMachines, ForegoingConfigData> configDataMap = new HashMap<>();
@@ -30,9 +34,7 @@ public class ForegoingConfigParser implements ConfigParser<ForegoingConfigData> 
 
         try {
             BufferedReader reader = new BufferedReader(new FileReader(foregoingConfig));
-            pl.getLogger().info("§cMAP:");
             parseConfigData(reader.lines().collect(Collectors.toList()));
-            pl.getLogger().info("§c" + configDataMap.toString());
 
             reader.close();
         } catch (IOException e) {
@@ -45,14 +47,11 @@ public class ForegoingConfigParser implements ConfigParser<ForegoingConfigData> 
             if (isConfigSectionBeginning(lines.get(i)))
                 parseConfigSection(lines, i);
         }
-
-        System.out.println(configDataMap);
     }
 
     private void parseConfigSection(List<String> lines, int startIndex) {
         final StackableMachines machine = getMachine(lines.get(startIndex));
         for (String line : lines.subList(startIndex, lines.size())) {
-            System.out.println(line);
             if (line.matches(".*}.*")) return;    // Config section is done
 
             if (!isData(line)) continue;

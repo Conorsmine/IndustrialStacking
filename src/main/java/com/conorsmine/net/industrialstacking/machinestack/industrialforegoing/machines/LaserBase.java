@@ -69,7 +69,6 @@ public class LaserBase extends MachineStack {
 
             // Add to empty slot
             if (baseItem == null) {
-                System.out.println("Empty slot: " + i);
                 addItemToEmpty(baseItems, i, minedItem);
                 shouldRecurs(baseItems, minedItem);
                 continue;

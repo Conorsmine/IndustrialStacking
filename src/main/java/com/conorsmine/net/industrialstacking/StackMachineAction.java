@@ -20,8 +20,8 @@ public class StackMachineAction {
     private final Block block;
     private final ItemStack item;
     private final MachineStack machineStack;
-    private final StackableMachines machineEnums;
-    private final Integer maxStackSize;
+    private final StackableMachines machineEnum;
+    private final int maxStackSize;
 
     private final PlayerInteractEvent event;
 
@@ -34,10 +34,10 @@ public class StackMachineAction {
         this.event = event;
 
         this.machineStack = pl.getStackManager().get(block.getLocation());
-        this.machineEnums = StackableMachines.machineFromType(block.getType());
+        this.machineEnum = StackableMachines.machineFromType(block.getType());
 
-        if (machineEnums == null) this.maxStackSize = 0;
-        else this.maxStackSize = pl.getMachineConfigFile().getMaxStackSizeMap().get(machineEnums.getConfigName());
+        if (machineEnum == null) this.maxStackSize = 0;
+        else this.maxStackSize = pl.getMachineConfigFile().getMaxStackSizeMap().get(machineEnum.getConfigName());
     }
 
     public void configureMachineStack() {
@@ -45,37 +45,37 @@ public class StackMachineAction {
 
         if (pl.getStackManager().containsKey(block.getLocation())) addToMachineStack();
         else createMachineStack();
-
         event.setCancelled(true);
     }
 
     private boolean isAddableItem() {
         final String blockType = block.getType().name().toUpperCase(Locale.ROOT);
-        if (!blockType.matches("INDUSTRIALFOREGOING_.+")) return false;
         if (item == null || item.getType() == Material.AIR) return false;
         if (!StackableMachines.getMatNameSet().contains(blockType)) return false;
         return (item.getType().name().equals(block.getType().name()));
     }
 
     private void addToMachineStack() {
-        if (machineStack == null || machineEnums == null) return;
-        if (maxStackSize == null || maxStackSize == 0) return;
+        if (machineStack == null || machineEnum == null) return;
+        if (maxStackSize == 0) return;
         if (maxStackSize != -1 && machineStack.getStackAmount() >= maxStackSize) { stackLimitReachedMsg(); return; }
 
         machineStack.addMachineToStack();
         saveMachineToFile(machineStack);
         removeItem();
+        p.sendMessage(String.format("%s §aAdded machine to stack.§r", pl.getPrefix()));
     }
 
     private void createMachineStack() {
-        if (machineEnums == null) return;
-        if (maxStackSize == null || maxStackSize == 0) return;
+        if (machineEnum == null) return;
+        if (maxStackSize == 0) return;
 
-        final MachineStack machineStack = machineEnums.createNew(pl, block);
+        final MachineStack machineStack = machineEnum.createNew(pl, block);
         if (machineStack == null) return;
         pl.getStackManager().put(block.getLocation(), machineStack);
         saveMachineToFile(machineStack);
         removeItem();
+        p.sendMessage(String.format("%s §aAdded machine to stack.§r", pl.getPrefix()));
     }
 
     private void removeItem() {
@@ -85,7 +85,7 @@ public class StackMachineAction {
     private void stackLimitReachedMsg() {
         p.sendMessage(String.format("%s §3Stack limit of §l§b%d §r§3reached!§r",
                 pl.getPrefix(),
-                pl.getMachineConfigFile().getMaxStackSizeMap().get(machineEnums.getConfigName())));
+                pl.getMachineConfigFile().getMaxStackSizeMap().get(machineEnum.getConfigName())));
     }
 
     private void saveMachineToFile(MachineStack machineStack) {

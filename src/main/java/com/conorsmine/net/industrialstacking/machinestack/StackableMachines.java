@@ -1,9 +1,7 @@
 package com.conorsmine.net.industrialstacking.machinestack;
 
 import com.conorsmine.net.industrialstacking.IndustrialStacking;
-import com.conorsmine.net.industrialstacking.machinestack.industrialforegoing.machines.LaserBase;
-import com.conorsmine.net.industrialstacking.machinestack.industrialforegoing.machines.LaserDrill;
-import com.conorsmine.net.industrialstacking.machinestack.industrialforegoing.machines.MobDuplicator;
+import com.conorsmine.net.industrialstacking.machinestack.industrialforegoing.machines.*;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.jetbrains.annotations.Nullable;
@@ -13,9 +11,17 @@ import java.util.*;
 
 public enum StackableMachines {
 
-    LASER_DRILL     (Material.valueOf("INDUSTRIALFOREGOING_LASER_DRILL"), LaserDrill.class, "laser_drill"),
-    LASER_BASE      (Material.valueOf("INDUSTRIALFOREGOING_LASER_BASE"), LaserBase.class, "laser_base"),
-    MOB_DUPLICATOR  (Material.valueOf("INDUSTRIALFOREGOING_MOB_DUPLICATOR"), MobDuplicator.class, "mob_duplicator")
+    LASER_DRILL                 (Material.valueOf("INDUSTRIALFOREGOING_LASER_DRILL"), LaserDrill.class, "laser_drill"),
+    LASER_BASE                  (Material.valueOf("INDUSTRIALFOREGOING_LASER_BASE"), LaserBase.class, "laser_base"),
+    HYDRATOR                    (Material.valueOf("INDUSTRIALFOREGOING_HYDRATOR"), Hydrator.class, "hydrator"),
+    VILLAGER_TRADE_EXCHANGER    (Material.valueOf("INDUSTRIALFOREGOING_VILLAGER_TRADE_EXCHANGER"), VillagerTradeExchanger.class, "villager_trade_exchanger"),
+    RESOURCEFUL_FURNACE         (Material.valueOf("INDUSTRIALFOREGOING_RESOURCEFUL_FURNACE"), ResourcefulFurnace.class, "resourceful_furnace"),
+    MATERIAL_STONEWORK_FACTORY  (Material.valueOf("INDUSTRIALFOREGOING_MATERIAL_STONEWORK_FACTORY"), MaterialStoneworkFactory.class, "material_stonework_factory"),
+    ANIMAL_SEWER                (Material.valueOf("INDUSTRIALFOREGOING_ANIMAL_BYPRODUCT_RECOLECTOR"), AnimalSewer.class, "animal_byproduct_recolector"),
+    TREE_FLUID_EXTRACTOR        (Material.valueOf("INDUSTRIALFOREGOING_TREE_FLUID_EXTRACTOR"), TreeFluidExtractor.class, "tree_fluid_extractor"),
+    MOB_DUPLICATOR              (Material.valueOf("INDUSTRIALFOREGOING_MOB_DUPLICATOR"), MobDuplicator.class, "mob_duplicator"),
+    RESOURCE_FISHER             (Material.valueOf("INDUSTRIALFOREGOING_WATER_RESOURCES_COLLECTOR"), ResourceFisher.class, "water_resources_collector"),
+    POTION_BREWER               (Material.valueOf("INDUSTRIALFOREGOING_POTION_ENERVATOR"), PotionBrewer.class, "potion_enervator"),
     ;
 
 
