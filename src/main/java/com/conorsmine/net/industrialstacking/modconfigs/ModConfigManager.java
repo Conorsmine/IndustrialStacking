@@ -26,8 +26,6 @@ public class ModConfigManager {
         this.foregoingConfigParser.parse();
         this.voidMinerConfigParser = new VoidMinerConfigParser(pl);
         this.voidMinerConfigParser.parse();
-
-        System.out.println(getVoidMinerConfig());
     }
 
     public Map<StackableMachines, ForegoingConfigData> getForegoingConfig() {
@@ -36,5 +34,13 @@ public class ModConfigManager {
 
     public Map<StackableMachines, VoidMinerConfigData> getVoidMinerConfig() {
         return voidMinerConfigParser.getConfigMap();
+    }
+
+    public ForegoingConfigParser getForegoingConfigParser() {
+        return foregoingConfigParser;
+    }
+
+    public VoidMinerConfigParser getVoidMinerConfigParser() {
+        return voidMinerConfigParser;
     }
 }
