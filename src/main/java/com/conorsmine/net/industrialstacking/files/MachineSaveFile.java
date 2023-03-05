@@ -18,10 +18,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @SuppressWarnings("unchecked")
 public class MachineSaveFile {
@@ -83,15 +80,15 @@ public class MachineSaveFile {
     /**
      * @return Map of the JSON file
      */
-    public Map<Material, Set<MachineSaveWrapper>> deserialize() {
-        final Map<Material, Set<MachineSaveWrapper>> machineMap = new HashMap<>();
+    public Map<Material, List<MachineSaveWrapper>> deserialize() {
+        final Map<Material, List<MachineSaveWrapper>> machineMap = new HashMap<>();
 
         for (Object o : jsonFile.keySet()) {
             final Material material = Material.matchMaterial(((String) o));
             if (material == null) continue;
 
-            final Set<MachineSaveWrapper> machines = new HashSet<>();
-            final JSONArray machineTypeArr = (JSONArray) jsonFile.get(o);
+            final List<MachineSaveWrapper> machines = new LinkedList<>();
+            final JSONArray machineTypeArr = (JSONArray) jsonFile.get(((String) o));
 
             for (Object o1 : machineTypeArr)
                 machines.add(new MachineSaveWrapper(((JSONObject) o1)));
@@ -106,15 +103,15 @@ public class MachineSaveFile {
      */
     public Map<Location, MachineStack> mapDeserializedData() {
         final Map<Location, MachineStack> map = new HashMap<>();
-        for (Map.Entry<Material, Set<MachineSaveWrapper>> materialSetEntry : deserialize().entrySet()) {
+        for (Map.Entry<Material, List<MachineSaveWrapper>> materialSetEntry : deserialize().entrySet()) {
             final Material material = materialSetEntry.getKey();
-            final Set<MachineSaveWrapper> machineSaveWrappers = materialSetEntry.getValue();
+            final List<MachineSaveWrapper> machineSaveWrappers = materialSetEntry.getValue();
 
             for (MachineSaveWrapper saveWrapper : machineSaveWrappers) {
                 final Location machineLocation = saveWrapper.getMachineLocation();
 
                 final MachineStack machineStack = getMachineStack(machineLocation, material, saveWrapper.getMachineStackSize());
-                if (machineStack == null) continue;
+                if (machineStack == null) { pl.getMachineSaveFile().removeMachineStack(machineLocation); continue; }
                 map.put(machineLocation, machineStack);
             }
         }
@@ -163,6 +160,23 @@ public class MachineSaveFile {
         machineTypeArr.remove(machineIndex);
         jsonFile.put(key, machineTypeArr);
         save();
+    }
+
+    public void removeMachineStack(final Location location) {
+        for (Object o : jsonFile.keySet()) {
+            final String machineTypeKey = ((String) o);
+            final JSONArray machineDataArr = ((JSONArray) jsonFile.get(machineTypeKey));
+
+            for (int i = 0; i < machineDataArr.size(); i++) {
+                final JSONObject locationData = (JSONObject) ((JSONObject) machineDataArr.get(i)).get("Location");
+                if (!isSameLocation(location, locationData)) continue;
+
+                // Remove json
+                machineDataArr.remove(i);
+                save();
+                return;
+            }
+        }
     }
 
     /**
