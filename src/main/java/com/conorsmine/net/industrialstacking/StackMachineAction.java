@@ -37,7 +37,8 @@ public class StackMachineAction {
         this.machineEnum = StackableMachines.machineFromType(block.getType());
 
         if (machineEnum == null) this.maxStackSize = 0;
-        else this.maxStackSize = pl.getMachineConfigFile().getMaxStackSizeMap().get(machineEnum.getConfigName());
+        else this.maxStackSize = pl.getMachineConfigFile().getMaxStackSizeMap()
+                .getOrDefault(machineEnum.getConfigName(), 0);
     }
 
     public void configureMachineStack() {
@@ -58,7 +59,7 @@ public class StackMachineAction {
     private void addToMachineStack() {
         if (machineStack == null || machineEnum == null) return;
         if (maxStackSize == 0) return;
-        if (maxStackSize != -1 && machineStack.getStackAmount() >= maxStackSize) { stackLimitReachedMsg(); return; }
+        if (!(maxStackSize <= -1) && machineStack.getStackAmount() >= maxStackSize) { stackLimitReachedMsg(); return; }
 
         machineStack.addMachineToStack();
         saveMachineToFile(machineStack);

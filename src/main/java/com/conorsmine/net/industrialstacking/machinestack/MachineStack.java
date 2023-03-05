@@ -67,7 +67,8 @@ public abstract class MachineStack {
      * @return The amount of machines in the stack, clamped by the config
      */
     public int getStackAmount() {
-        return Math.min(this.stackAmount, pl.getMachineConfigFile().getMaxStackSizeMap().get(machineEnum.getConfigName()));
+        if (getMaxStackAmount() <= -1) return this.stackAmount;
+        return Math.min(this.stackAmount, getMaxStackAmount());
     }
 
     /**
@@ -78,10 +79,25 @@ public abstract class MachineStack {
     }
 
     /**
+     * @return The max stack amount of this machine
+     */
+    public int getMaxStackAmount() {
+        return pl.getMachineConfigFile().getMaxStackSizeMap().get(machineEnum.getConfigName());
+    }
+
+    /**
      * Increases the stack by 1
      */
     public void addMachineToStack() {
         this.stackAmount++;
+    }
+
+    /**
+     * @return True if the stack was reduced by one machine. False if the stack amount would be 0.
+     */
+    public boolean removeMachineFromStack() {
+        this.stackAmount--;
+        return (this.stackAmount <= 0);
     }
 
     /**
@@ -97,7 +113,7 @@ public abstract class MachineStack {
     public ItemStack getMachineItemStack() {
         final int idOffset = pl.getMachineConfigFile().getIdOffsetMap().getOrDefault(machineEnum.getModFromMachine(), 0);
         final int machineId = machineType.getId() + idOffset;
-        return new ItemStack(machineId, getStackAmount());
+        return new ItemStack(machineId, getAbsoluteStackAmount());
     }
 
     /**
