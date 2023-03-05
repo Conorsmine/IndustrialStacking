@@ -146,7 +146,7 @@ public class MachineSaveFile {
         final int machineIndex = getSameMachineIndex(location, machineTypeArr);
 
         machineJson.put("Location", createLocationJson(location));
-        machineJson.put("StackSize", machineStack.getStackAmount());
+        machineJson.put("StackSize", machineStack.getAbsoluteStackAmount());
         if (machineIndex == machineTypeArr.size())
             machineTypeArr.add(machineJson);
         else

@@ -64,9 +64,16 @@ public abstract class MachineStack {
     }
 
     /**
-     * @return The amount of machines in the stack
+     * @return The amount of machines in the stack, clamped by the config
      */
     public int getStackAmount() {
+        return Math.min(this.stackAmount, pl.getMachineConfigFile().getMaxStackSizeMap().get(machineEnum.getConfigName()));
+    }
+
+    /**
+     * @return Absolute amount of stacked machines
+     */
+    public int getAbsoluteStackAmount() {
         return this.stackAmount;
     }
 
@@ -88,9 +95,8 @@ public abstract class MachineStack {
      * @return The amount of items that should be returned when the block breaks or explodes.
      */
     public ItemStack getMachineItemStack() {
-        // Todo:
-        //  This may cause issues, idk yet, needs further testing!
-        final int machineId = machineType.getId() + 3907;
+        final int idOffset = pl.getMachineConfigFile().getIdOffsetMap().getOrDefault(machineEnum.getModFromMachine(), 0);
+        final int machineId = machineType.getId() + idOffset;
         return new ItemStack(machineId, getStackAmount());
     }
 

@@ -42,8 +42,14 @@ public class EvenListener implements Listener {
         final MachineStack machineStack = pl.getStackManager().get(event.getClickedBlock().getLocation());
         if (machineStack == null) return;
 
-        event.getPlayer().sendMessage(String.format("%s §3This machine contains §b§l%d §r§3more machines.§r",
+        final Player player = event.getPlayer();
+        player.sendMessage(String.format("%s §3This machine contains §b§l%d §r§3more machines.§r",
                 pl.getPrefix(), machineStack.getStackAmount()));
+
+
+        if (player.isOp())
+            player.sendMessage(String.format("%s §7>> Absolute amount of stacked machines: §3%s§r",
+                    pl.getPrefix(), machineStack.getAbsoluteStackAmount()));
 
         event.setCancelled(true);
     }
