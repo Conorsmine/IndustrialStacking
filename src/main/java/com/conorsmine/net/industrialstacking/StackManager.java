@@ -2,20 +2,21 @@ package com.conorsmine.net.industrialstacking;
 
 
 import com.conorsmine.net.industrialstacking.machinestack.MachineStack;
-import de.tr7zw.nbtapi.NBTTileEntity;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Consumer;
 
 public final class StackManager extends ConcurrentHashMap<Location, MachineStack> {
 
     private final IndustrialStacking pl;
+    private final Queue<Runnable> afterWork = new ConcurrentLinkedQueue<>(); // A queue for actions to be performed after the next iteration of machine
 
     StackManager(IndustrialStacking pl) {
         this.pl = pl;
@@ -38,6 +39,11 @@ public final class StackManager extends ConcurrentHashMap<Location, MachineStack
             if (!isValidBlock(machineStack, machineLoc)) { machineStack.removeMachineStack(); continue; }
             machineStack.tick();
         }
+
+        if (afterWork.size() > 0) {
+            afterWork.element().run();
+            afterWork.remove();
+        }
     }
 
     private boolean isValidBlock(MachineStack machineStack, Location machineLocation) {
@@ -45,5 +51,9 @@ public final class StackManager extends ConcurrentHashMap<Location, MachineStack
         if (machineStack == null || machineStack.getMachineTile() == null) return false;
         if (block == null || block.getType() != machineStack.getMachineType()) return false;
         return true;
+    }
+
+    public void addToActionQueue(Runnable action) {
+        afterWork.add(action);
     }
 }
