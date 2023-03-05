@@ -6,6 +6,35 @@ depend: [NBTAPI]
 api-version: 1.12
 
 commands:
-  reloadStackables:
-    description: Reload the plugin, mainly the config file.
-    permission: IndustrialStacking.reload
+  industrialStacking:
+    description: Main command for the plugin.
+    aliases: [is, istk]
+
+permissions:
+  IndustrialStacking.*:
+    description: Adming permission for all commands.
+
+  # List
+  IndsutrialStacking.listMachines:
+    description: Lists all stacked machines.
+
+  # Find
+  IndustrialStacking.find.*:
+    description: Admin permission for all find commands.
+
+  # Reloading
+  IndustrialStacking.reload.*:
+    description: Admin permission for all reload commands.
+    children: [IndustrialStacking.reload.all]
+
+  IndustrialStacking.reload.all:
+    description: Permission for all reload commands.
+
+  IndustrialStacking.reload.plugin:
+    description: Permission to apply changes from the config file.
+
+  IndustrialStacking.reload.mod:
+    description: Permission to apply changes from the mods config files.
+
+  IndustrialStacking.reload.save:
+    description: Permission to apply chanes from the saves file.

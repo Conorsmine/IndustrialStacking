@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class VoidMinerConfigData implements ConfigData {
 
-    public final Map<String, Object> configMap = new HashMap<>();
+    private final Map<String, Object> configMap = new HashMap<>();
 
     @Override
     public Map<String, Object> getConfigData() {

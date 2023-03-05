@@ -66,7 +66,7 @@ public class MachineSaveFile {
         return null;
     }
 
-    private void save() {
+    public void save() {
         try {
             FileWriter writer = new FileWriter(logFile);
             Gson gson = new GsonBuilder().setPrettyPrinting().create();

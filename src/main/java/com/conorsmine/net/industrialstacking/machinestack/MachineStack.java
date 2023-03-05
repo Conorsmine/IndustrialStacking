@@ -120,8 +120,8 @@ public abstract class MachineStack {
      * Removes this machine stack.
      */
     public void removeMachineStack() {
-        pl.getStackManager().remove(getBlock().getLocation());
         pl.getMachineSaveFile().removeMachineStack(this);
+        pl.getStackManager().remove(getBlock().getLocation());
     }
 
     public IndustrialStacking getPl() {
@@ -138,6 +138,7 @@ public abstract class MachineStack {
         return "MachineStack{" +
                 "machineType=" + machineType +
                 ", stackAmount=" + stackAmount +
+                ", location=" + block.getLocation() +
                 '}';
     }
 }
