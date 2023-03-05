@@ -62,3 +62,7 @@ water_resources_collector:
 # Increases the work speed.
 potion_enervator:
   maxStackSize: -1
+
+# Each machine increases the amount of output by 1
+void miner:
+  maxStackSize: -1

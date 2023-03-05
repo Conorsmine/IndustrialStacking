@@ -1,6 +1,7 @@
 package com.conorsmine.net.industrialstacking.machinestack;
 
 import com.conorsmine.net.industrialstacking.IndustrialStacking;
+import com.conorsmine.net.industrialstacking.machinestack.compactvoidminer.CompactVoidMiner;
 import com.conorsmine.net.industrialstacking.machinestack.industrialforegoing.machines.*;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -11,6 +12,7 @@ import java.util.*;
 
 public enum StackableMachines {
 
+    // Industrial Foregoing
     LASER_DRILL                 (Material.valueOf("INDUSTRIALFOREGOING_LASER_DRILL"), LaserDrill.class, "laser_drill"),
     LASER_BASE                  (Material.valueOf("INDUSTRIALFOREGOING_LASER_BASE"), LaserBase.class, "laser_base"),
     HYDRATOR                    (Material.valueOf("INDUSTRIALFOREGOING_HYDRATOR"), Hydrator.class, "hydrator"),
@@ -22,6 +24,9 @@ public enum StackableMachines {
     MOB_DUPLICATOR              (Material.valueOf("INDUSTRIALFOREGOING_MOB_DUPLICATOR"), MobDuplicator.class, "mob_duplicator"),
     RESOURCE_FISHER             (Material.valueOf("INDUSTRIALFOREGOING_WATER_RESOURCES_COLLECTOR"), ResourceFisher.class, "water_resources_collector"),
     POTION_BREWER               (Material.valueOf("INDUSTRIALFOREGOING_POTION_ENERVATOR"), PotionBrewer.class, "potion_enervator"),
+
+    // Compact void miner
+    COMPACT_VOID_MINER          (Material.valueOf("COMPACTVOIDMINERS_VOID_MINER"), CompactVoidMiner.class, "void miner")
     ;
 
 

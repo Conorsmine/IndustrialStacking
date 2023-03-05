@@ -1,33 +1,34 @@
-package com.conorsmine.net.industrialstacking.modconfigs.industrialforegoing;
+package com.conorsmine.net.industrialstacking.modconfigs.compactvoidminer;
 
 import com.conorsmine.net.industrialstacking.IndustrialStacking;
-import com.conorsmine.net.industrialstacking.modconfigs.ConfigParser;
 import com.conorsmine.net.industrialstacking.machinestack.StackableMachines;
+import com.conorsmine.net.industrialstacking.modconfigs.ConfigParser;
 import com.conorsmine.net.industrialstacking.modconfigs.DataTypes;
+import com.conorsmine.net.industrialstacking.modconfigs.industrialforegoing.ForegoingConfigData;
+import com.conorsmine.net.industrialstacking.modconfigs.industrialforegoing.ForegoingConfigParser;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class ForegoingConfigParser implements ConfigParser<ForegoingConfigData> {
+public class VoidMinerConfigParser implements ConfigParser<VoidMinerConfigData> {
 
-    private static final String FILE_NAME = "industrialforegoing.cfg";
+    private static final String FILE_NAME = "compactvoidminers.cfg";
+    private static final String[] CONFIG_SECTIONS = new String[] { "general" }; // Config sections to be parsed
     private static final StackableMachines[] CONFIG_MACHINES = new StackableMachines[]
-            { StackableMachines.LASER_DRILL, StackableMachines.LASER_BASE, StackableMachines.HYDRATOR,
-                    StackableMachines.VILLAGER_TRADE_EXCHANGER, StackableMachines.RESOURCEFUL_FURNACE,
-                    StackableMachines.MATERIAL_STONEWORK_FACTORY, StackableMachines.ANIMAL_SEWER,
-                    StackableMachines.TREE_FLUID_EXTRACTOR, StackableMachines.MOB_DUPLICATOR,
-                    StackableMachines.RESOURCE_FISHER, StackableMachines.POTION_BREWER };
+            { StackableMachines.COMPACT_VOID_MINER };
 
     private final IndustrialStacking pl;
-    private final Map<StackableMachines, ForegoingConfigData> configDataMap = new HashMap<>();
+    private final Map<StackableMachines, VoidMinerConfigData> configDataMap = new HashMap<>();
 
-    public ForegoingConfigParser(IndustrialStacking pl) {
+    public VoidMinerConfigParser(IndustrialStacking pl) {
         this.pl = pl;
     }
-
 
     @Override
     public void parse() {
@@ -51,7 +52,7 @@ public class ForegoingConfigParser implements ConfigParser<ForegoingConfigData> 
     }
 
     private void parseConfigSection(List<String> lines, int startIndex) {
-        final StackableMachines machine = getMachine(lines.get(startIndex));
+        final StackableMachines machine = StackableMachines.COMPACT_VOID_MINER; // I can do this, since it's the only machine
         for (String line : lines.subList(startIndex, lines.size())) {
             if (line.matches(".*}.*")) return;    // Config section is done
 
@@ -59,33 +60,23 @@ public class ForegoingConfigParser implements ConfigParser<ForegoingConfigData> 
             String dataKey = DataTypes.getDataKey(line);
             Object dataValue = DataTypes.getDataValue(line);
 
-            ForegoingConfigData configData = configDataMap.getOrDefault(machine, new ForegoingConfigData());
+            VoidMinerConfigData configData = configDataMap.getOrDefault(machine, new VoidMinerConfigData());
             configData.addConfigData(dataKey, dataValue);
             configDataMap.put(machine, configData);
         }
     }
 
     private boolean isConfigSectionBeginning(String line) {
-        for (StackableMachines machine : CONFIG_MACHINES) {
-            if (line.matches(String.format(".*%s.*", machine.getConfigName())))
+        for (String configSection : CONFIG_SECTIONS) {
+            if (line.matches(String.format(".*%s.*", configSection)))
                 return true;
         }
 
         return false;
     }
 
-    private StackableMachines getMachine(String sectionHead) {
-        for (StackableMachines configMachine : CONFIG_MACHINES) {
-            if (sectionHead.contains(configMachine.getConfigName()))
-                return configMachine;
-        }
-
-        // Should never happen
-        return null;
-    }
-
     @Override
-    public Map<StackableMachines, ForegoingConfigData> getConfigMap() {
+    public Map<StackableMachines, VoidMinerConfigData> getConfigMap() {
         return configDataMap;
     }
 

@@ -22,7 +22,7 @@ public class TreeFluidExtractor extends MachineStack {
     private static final int TICK_RATE = 5;
     private static final double BREAK_CHANCE = 0.005d;
 
-    private int workTick = 0;
+    private byte workTick = 0;
 
     public TreeFluidExtractor(@NotNull IndustrialStacking plugin, @NotNull Block tileEntity) {
         super(plugin, tileEntity, StackableMachines.TREE_FLUID_EXTRACTOR);
@@ -34,6 +34,7 @@ public class TreeFluidExtractor extends MachineStack {
         int fluidAmount = getFluidTankNBT().getInteger("Amount");
         if (fluidAmount >= 8000) { getFluidTankNBT().setInteger("Amount", 8000); return; }
         if ((workTick % TICK_RATE) != 0) return;
+        workTick = 0;
         final Block logBlock = getLogBlock();
         if (logBlock == null) return;
 

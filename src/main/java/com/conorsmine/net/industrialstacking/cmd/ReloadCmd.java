@@ -1,6 +1,7 @@
 package com.conorsmine.net.industrialstacking.cmd;
 
 import com.conorsmine.net.industrialstacking.IndustrialStacking;
+import com.conorsmine.net.industrialstacking.modconfigs.compactvoidminer.VoidMinerConfigParser;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
