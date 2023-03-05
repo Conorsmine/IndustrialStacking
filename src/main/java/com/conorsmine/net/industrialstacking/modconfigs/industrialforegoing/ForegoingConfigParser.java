@@ -22,15 +22,18 @@ public class ForegoingConfigParser implements ConfigParser<ForegoingConfigData> 
                     StackableMachines.RESOURCE_FISHER, StackableMachines.POTION_BREWER };
 
     private final IndustrialStacking pl;
+    private boolean isInstalled;
     private final Map<StackableMachines, ForegoingConfigData> configDataMap = new HashMap<>();
 
     public ForegoingConfigParser(IndustrialStacking pl) {
         this.pl = pl;
+        this.isInstalled = isConfigFilePresent();
     }
 
 
     @Override
     public void parse() {
+        if (!isInstalled) return;
         final File foregoingConfig = new File(pl.getModsConfigDir(), FILE_NAME);
 
         try {
@@ -92,5 +95,14 @@ public class ForegoingConfigParser implements ConfigParser<ForegoingConfigData> 
     @Override
     public StackableMachines[] getConfigMachines() {
         return CONFIG_MACHINES;
+    }
+
+    @Override
+    public boolean isInstalled() {
+        return isInstalled;
+    }
+
+    private boolean isConfigFilePresent() {
+        return new File(pl.getModsConfigDir(), FILE_NAME).exists();
     }
 }

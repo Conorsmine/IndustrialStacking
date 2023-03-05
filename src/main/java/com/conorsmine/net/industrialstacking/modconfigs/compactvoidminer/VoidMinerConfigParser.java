@@ -24,10 +24,12 @@ public class VoidMinerConfigParser implements ConfigParser<VoidMinerConfigData> 
             { StackableMachines.COMPACT_VOID_MINER };
 
     private final IndustrialStacking pl;
+    private boolean isInstalled;
     private final Map<StackableMachines, VoidMinerConfigData> configDataMap = new HashMap<>();
 
     public VoidMinerConfigParser(IndustrialStacking pl) {
         this.pl = pl;
+        this.isInstalled = isConfigFilePresent();
     }
 
     @Override
@@ -83,5 +85,15 @@ public class VoidMinerConfigParser implements ConfigParser<VoidMinerConfigData> 
     @Override
     public StackableMachines[] getConfigMachines() {
         return CONFIG_MACHINES;
+    }
+
+
+    @Override
+    public boolean isInstalled() {
+        return isInstalled;
+    }
+
+    private boolean isConfigFilePresent() {
+        return new File(pl.getModsConfigDir(), FILE_NAME).exists();
     }
 }

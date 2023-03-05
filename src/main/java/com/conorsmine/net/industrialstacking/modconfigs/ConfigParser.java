@@ -24,4 +24,10 @@ public interface ConfigParser<T extends ConfigData> {
      * @return Array of machines in that config.
      */
     StackableMachines[] getConfigMachines();
+
+    /**
+     * Determining this boolean will be dependent on if the config file exists or not.
+     * @return Is the mod installed
+     */
+    boolean isInstalled();
 }
