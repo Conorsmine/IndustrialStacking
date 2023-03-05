@@ -1,6 +1,7 @@
 package com.conorsmine.net.industrialstacking.machinestack;
 
 import com.conorsmine.net.industrialstacking.IndustrialStacking;
+import com.conorsmine.net.industrialstacking.exceptions.MachineMapException;
 import com.conorsmine.net.industrialstacking.machinestack.compactvoidminer.CompactVoidMiner;
 import com.conorsmine.net.industrialstacking.machinestack.industrialforegoing.machines.*;
 import org.bukkit.Material;
@@ -32,12 +33,20 @@ public enum StackableMachines {
 
 
     private static final Map<Material, StackableMachines> matMap = new HashMap<>();
+    private static final Map<StackableMods, StackableMachines[]> modMachines = new HashMap<>();
     private static final Set<String> matNameSet = new HashSet<>();  // A set to quickly check if a material is registered
     static {
         for (StackableMachines stackableMachine : values()) {
             matMap.put(stackableMachine.material, stackableMachine);
             matNameSet.add(stackableMachine.material.name().toUpperCase(Locale.ROOT));
         }
+
+        modMachines.put(StackableMods.INDUSTRIAL_FOREGOING, new StackableMachines[]
+                {LASER_DRILL, LASER_BASE, HYDRATOR, VILLAGER_TRADE_EXCHANGER, RESOURCEFUL_FURNACE,
+                        MATERIAL_STONEWORK_FACTORY, ANIMAL_SEWER, TREE_FLUID_EXTRACTOR, MOB_DUPLICATOR,
+                        RESOURCE_FISHER, POTION_BREWER });
+
+        modMachines.put(StackableMods.COMPACT_VOID_MINER, new StackableMachines[] { COMPACT_VOID_MINER });
     }
 
     /**
@@ -58,6 +67,11 @@ public enum StackableMachines {
         this.configName = configName;
     }
 
+    /**
+     * @param plugin Instance of the plugin for parsing to the constructor
+     * @param machineBlock Block of the machine
+     * @return New instance of a {@link MachineStack} or null if it failed.
+     */
     @Nullable
     public MachineStack createNew(IndustrialStacking plugin, Block machineBlock) {
         MachineStack machineStack = null;
@@ -71,23 +85,47 @@ public enum StackableMachines {
         return machineStack;
     }
 
+    /**
+     * @return Material of the machine
+     */
     public Material getMaterial() {
         return material;
     }
 
-    public Class<? extends MachineStack> getClazz() {
-        return clazz;
-    }
-
+    /**
+     * @return String corresponding to that in the "config.yml" file of the plugin and of the mods config
+     */
     public String getConfigName() {
         return configName;
     }
 
+    /**
+     * @return The {@link StackableMods} for this machine.
+     */
+    public StackableMods getModFromMachine() {
+        for (Map.Entry<StackableMods, StackableMachines[]> modEntry : modMachines.entrySet()) {
+            for (StackableMachines machine : modEntry.getValue()) {
+                if (machine == this) return modEntry.getKey();
+            }
+        }
+
+        throw new MachineMapException(String.format("\"%s\" is not mapped to a StackableMod enum!", this.name()));
+    }
+
+    /**
+     * @param material Material of the machine
+     * @return The corresponding machine or null if no machine has that material
+     */
     @Nullable
     public static StackableMachines machineFromType(Material material) {
         return matMap.get(material);
     }
 
+    /**
+     * While the string is automatically converted to upper case, the position of special characters like underscores have to be added, if need be.
+     * @param matName Name of the material
+     * @return The corresponding machine or null if no machine has that material name
+     */
     @Nullable
     public static StackableMachines machineFromName(String matName) {
         if (!matNameSet.contains(matName.toUpperCase(Locale.ROOT))) return null;
@@ -98,7 +136,25 @@ public enum StackableMachines {
         return null;
     }
 
+    /**
+     * Meant for quickly checking if a material is viable for stacking.
+     * @return Set of material names
+     */
     public static Set<String> getMatNameSet() {
         return matNameSet;
+    }
+
+    /**
+     * @return Map of {@link StackableMachines} array for {@link StackableMods}.
+     */
+    public static Map<StackableMods, StackableMachines[]> getModMachines() {
+        return modMachines;
+    }
+
+    /**
+     * @return The {@link StackableMods} for this machine.
+     */
+    public static StackableMods getModFromMachine(StackableMachines machine) {
+        return machine.getModFromMachine();
     }
 }

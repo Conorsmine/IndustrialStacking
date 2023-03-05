@@ -16,53 +16,64 @@
 # Therefore, changing the config will not delete machines.
 ###############################
 
-# Increases the work speed.
-laser_drill:
-  maxStackSize: -1
+industrial_foregoing:
+  # Depending on the amount of mods, the id of an item changes
+  # Insert here the difference between the item you get from breaking a stacked machine and what the id should be
+  id_offset: 3907
 
-# Each machine increases the amount of output by 1
-laser_base:
-  maxStackSize: -1
+  # Increases the work speed.
+  laser_drill:
+    maxStackSize: -1
 
-# Increases the work speed.
-hydrator:
-  maxStackSize: -1
+  # Each machine increases the amount of output by 1
+  laser_base:
+    maxStackSize: -1
 
-# Increases the work speed.
-villager_trade_exchanger:
-  maxStackSize: -1
+  # Increases the work speed.
+  hydrator:
+    maxStackSize: -1
 
-# Increases the work speed.
-resourceful_furnace:
-  maxStackSize: -1
+  # Increases the work speed.
+  villager_trade_exchanger:
+    maxStackSize: -1
 
-# Increases the work speed.
-material_stonework_factory:
-  maxStackSize: -1
+  # Increases the work speed.
+  resourceful_furnace:
+    maxStackSize: -1
 
-# Animal sewer
-# Increases the work speed.
-animal_byproduct_recolector:
-  maxStackSize: -1
+  # Increases the work speed.
+  material_stonework_factory:
+    maxStackSize: -1
 
-# Increases the work speed.
-tree_fluid_extractor:
-  maxStackSize: -1
+  # Animal sewer
+  # Increases the work speed.
+  animal_byproduct_recolector:
+    maxStackSize: -1
 
-# Increases the work speed.
-mob_duplicator:
-  maxStackSize: -1
+  # Increases the work speed.
+  tree_fluid_extractor:
+    maxStackSize: -1
 
-# Resource fisher
-# Increases the work speed.
-water_resources_collector:
-  maxStackSize: -1
+  # Increases the work speed.
+  mob_duplicator:
+    maxStackSize: -1
 
-# Potion brewer
-# Increases the work speed.
-potion_enervator:
-  maxStackSize: -1
+  # Resource fisher
+  # Increases the work speed.
+  water_resources_collector:
+    maxStackSize: -1
 
-# Each machine increases the amount of output by 1
-void miner:
-  maxStackSize: -1
+  # Potion brewer
+  # Increases the work speed.
+  potion_enervator:
+    maxStackSize: -1
+
+
+compact_void_miner:
+  # Depending on the amount of mods, the id of an item changes
+  # Insert here the difference between the item you get from breaking a stacked machine and what the id should be
+  id_offset: 3907
+
+  # Each machine increases the amount of output by 1
+  void miner:
+    maxStackSize: -1
