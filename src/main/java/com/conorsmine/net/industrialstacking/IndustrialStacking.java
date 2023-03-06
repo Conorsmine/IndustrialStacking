@@ -7,12 +7,12 @@ import com.conorsmine.net.industrialstacking.files.MachineSaveWrapper;
 import com.conorsmine.net.industrialstacking.machinestack.StackableMachines;
 import com.conorsmine.net.industrialstacking.machinestack.StackableMods;
 import com.conorsmine.net.industrialstacking.modconfigs.ModConfigManager;
-import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -27,29 +27,53 @@ public final class IndustrialStacking extends JavaPlugin {
     private MachineConfigFile machineConfigFile;
     private MachineSaveFile machineSaveFile;
     private ModConfigManager modConfigManager;
+    private final CommandSender consoleSender = getServer().getConsoleSender();
+    private final IndustrialStackingCmd mainCommand = new IndustrialStackingCmd(this);
 
     @Override
     public void onEnable() {
+        long startTime = System.currentTimeMillis();
+        consoleSender.sendMessage(getPrefix());
+        consoleSender.sendMessage(getFancyLogo());
+        consoleSender.sendMessage(getPrefix());
+
         initConfig();
+
+        consoleSender.sendMessage(getPrefix());
+        consoleSender.sendMessage(String.format("%s§7Enabling §6machine stack manager§7...", getPrefix()));
         stackManager = new StackManager(this);
         stackManager.putAll(machineSaveFile.mapDeserializedData());
         getServer().getPluginManager().registerEvents(new EvenListener(this), this);
-        getCommand("industrialStacking").setExecutor(new IndustrialStackingCmd(this));
-        sendInfoDataMsg(getServer().getConsoleSender());
+        getCommand("industrialStacking").setExecutor(mainCommand);
+
+        consoleSender.sendMessage(getPrefix());
+        consoleSender.sendMessage(String.format("%s§aSuccessfully enabled §r%s§r§7-§6%s", getPrefix(), getPrefix().replaceAll("\\s*$", ""), getDescription().getVersion()));
+        consoleSender.sendMessage(String.format("%s§7Plugin took: §3%dms §7to enable.", getPrefix(), (System.currentTimeMillis() - startTime)));
     }
 
     @Override
     public void onDisable() {
         machineSaveFile.save();
 
-        getServer().getConsoleSender().sendMessage(String.format("%s§cGoodbye §7( ^_^)／", getPrefix()));
+        getServer().getConsoleSender().sendMessage(String.format("%s§3Goodbye §7( ^_^)/", getPrefix()));
     }
 
     private void initConfig() {
         this.saveDefaultConfig();
+
+        consoleSender.sendMessage(String.format("%s§aLoading §6plugin config:§r", getPrefix()));
         machineConfigFile = new MachineConfigFile(this).initConfig();
+        runConfigFileInfo(consoleSender);
+
+        consoleSender.sendMessage(getPrefix());
+        consoleSender.sendMessage(String.format("%s§aLoading §6save file:§r", getPrefix()));
         machineSaveFile = new MachineSaveFile(this);
+        runSaveFileInfo(consoleSender);
+
+        consoleSender.sendMessage(getPrefix());
+        consoleSender.sendMessage(String.format("%s§aLoading §6mod configs:§r", getPrefix()));
         modConfigManager = new ModConfigManager(this);
+        runModConfigInfo(consoleSender);
     }
 
     public void sendInfoDataMsg(CommandSender sender) {
@@ -63,7 +87,11 @@ public final class IndustrialStacking extends JavaPlugin {
 
     public void sendConfigFileInfo(CommandSender sender) {
         sender.sendMessage(getPrefix());
-        sender.sendMessage(String.format("%s§aLoading §6plugin config:§r", getPrefix()));
+        sender.sendMessage(String.format("%s§aLoading §6plugin config§a:§r", getPrefix()));
+        runConfigFileInfo(sender);
+    }
+
+    private void runConfigFileInfo(CommandSender sender) {
         Iterator<StackableMods> configIterator = machineConfigFile.getIdOffsetMap().keySet().iterator();
         while (configIterator.hasNext()) {
             StackableMods mods = configIterator.next();
@@ -82,7 +110,11 @@ public final class IndustrialStacking extends JavaPlugin {
 
     public void sendSaveFileInfo(CommandSender sender) {
         sender.sendMessage(getPrefix());
-        sender.sendMessage(String.format("%s§aLoading §6save file:§r", getPrefix()));
+        sender.sendMessage(String.format("%s§aLoading §6save file§a:§r", getPrefix()));
+        runSaveFileInfo(sender);
+    }
+
+    private void runSaveFileInfo(CommandSender sender) {
         int total = 0;
         for (Map.Entry<Material, List<MachineSaveWrapper>> entry : machineSaveFile.deserialize().entrySet()) {
             int size = entry.getValue().size();
@@ -94,14 +126,18 @@ public final class IndustrialStacking extends JavaPlugin {
     }
 
     public void sendModConfigInfo(CommandSender sender) {
+        sender.sendMessage(getPrefix());
+        sender.sendMessage(String.format("%s§aLoading §6mod configs§a:§r", getPrefix()));
+        runModConfigInfo(sender);
+    }
+
+    private void runModConfigInfo(CommandSender sender) {
+        boolean isPlayer = (sender instanceof Player);
         boolean ifLoaded = modConfigManager.getForegoingConfigParser().isInstalled();
         boolean minerLoaded = modConfigManager.getVoidMinerConfigParser().isInstalled();
-
-        sender.sendMessage(getPrefix());
-        sender.sendMessage(String.format("%s§aLoading §6mod configs:§r", getPrefix()));
-        sender.sendMessage(String.format("%s§7Note: Hover over the §3machine names §7for more info.§r", getPrefix()));
-        sender.sendMessage(String.format("%s§eIndustrialForegoing §7is §r%s§7.§r", getPrefix(),
-                ((ifLoaded) ? "§ainstalled" : "§cmissing")));
+        if (isPlayer) sender.sendMessage(String.format("%s§7Note: Hover over the §3machine names §7for more info.§r", getPrefix()));
+        sender.sendMessage(String.format("%s§eIndustrialForegoings §7config is §r%s§7.§r", getPrefix(),
+                (ifLoaded ? "§apresent" : "§cmissing")));
         if (ifLoaded) {
             sender.sendMessage(String.format("%s§7The following machine configs have been found:§r", getPrefix()));
 
@@ -117,8 +153,8 @@ public final class IndustrialStacking extends JavaPlugin {
             sender.sendMessage(getPrefix());
         }
 
-        sender.sendMessage(String.format("%s§eCompactVoidMiners §7is §r%s§7.§r", getPrefix(),
-                ((minerLoaded) ? "§ainstalled" : "§cmissing")));
+        sender.sendMessage(String.format("%s§eCompactVoidMiners §7config is §r%s§7.§r", getPrefix(),
+                (minerLoaded ? "§apresent" : "§cmissing")));
         if (minerLoaded) {
             sender.sendMessage(String.format("%s§7The following machine configs have been found:§r", getPrefix()));
 
@@ -132,6 +168,24 @@ public final class IndustrialStacking extends JavaPlugin {
                 sender.spigot().sendMessage(componentBuilder.create());
             }
         }
+
+
+        // Funnily enough, they won't... since I'm not even adding machines of non-existent mods
+        // to the StackManager map.
+        if (!(ifLoaded && minerLoaded))
+            sender.sendMessage(String.format("%s§cWARNING: §7Stacked machines of missing mods might be §cdeleted§7!§r", getPrefix()));
+    }
+
+    public String[] getFancyLogo() {
+        // Img from: https://discover.hubpages.com/art/ascii
+
+        return new String[] { getPrefix() + "§8ooooo  §6 .oooooo.. §r",
+                              getPrefix() + "§8`888'  §6d8P'    `Y8§r",
+                              getPrefix() + "§8 888   §6Y88bo.     §r   " + getPrefix(),
+                              getPrefix() + "§8 888   §6 `\"Y8888bo.§r   §7Version: §6" + getDescription().getVersion(),
+                              getPrefix() + "§8 888   §6     `\"Y88b§r",
+                              getPrefix() + "§8 888   §6oo     .d8P§r",
+                              getPrefix() + "§8o888o  §68\"\"88888P' §r" };
     }
 
     public File getModsConfigDir() {
