@@ -14,6 +14,10 @@ permissions:
   IndustrialStacking.*:
     description: Adming permission for all commands.
 
+  # View
+  IndsutrialStacking.viewMachines:
+    description: Adds a border around or stacked machines in the users vicinity.
+
   # List
   IndsutrialStacking.listMachines:
     description: Lists all stacked machines.
