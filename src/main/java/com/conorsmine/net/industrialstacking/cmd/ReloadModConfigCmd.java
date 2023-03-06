@@ -15,12 +15,12 @@ public class ReloadModConfigCmd extends Cmd {
     }
 
     @Override
-    String getDescription() {
+    public String getDescription() {
         return "§7Reloads the mod configs.";
     }
 
     @Override
-    String getUsage() {
+    public String getUsage() {
         return "§3/is reloadMod";
     }
 
@@ -28,7 +28,7 @@ public class ReloadModConfigCmd extends Cmd {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!sender.hasPermission(PERMISSION)) { nonPermissionMsg(sender, PERMISSION); return false; }
 
-        sender.sendMessage(String.format("%s§r§7§m     §r §eReload mods §7§m     §r", pl.getPrefix()));
+        sender.sendMessage(String.format("%s§r§7§m-----§r §eReload mods §7§m-----§r", pl.getPrefix()));
         pl.getModConfigManager().getForegoingConfigParser().parse();
         pl.getModConfigManager().getVoidMinerConfigParser().parse();
         pl.sendModConfigInfo(sender);

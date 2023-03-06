@@ -15,12 +15,12 @@ public class ReloadPluginCmd extends Cmd {
     }
 
     @Override
-    String getDescription() {
+    public String getDescription() {
         return "§7Reloads the plugin config.";
     }
 
     @Override
-    String getUsage() {
+    public String getUsage() {
         return "§3/is reloadPlugin";
     }
 
@@ -28,9 +28,10 @@ public class ReloadPluginCmd extends Cmd {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!sender.hasPermission(PERMISSION)) { nonPermissionMsg(sender, PERMISSION); return false; }
 
-        sender.sendMessage(String.format("%s§r§7§m     §r §eReload plugin §7§m     §r", pl.getPrefix()));
-        pl.saveDefaultConfig();
+        pl.reloadConfig();
         pl.getMachineConfigFile().initConfig();
+
+        sender.sendMessage(String.format("%s§r§7§m-----§r §eReload plugin §7§m-----§r", pl.getPrefix()));
         pl.sendConfigFileInfo(sender);
         return true;
     }

@@ -1,9 +1,7 @@
 package com.conorsmine.net.industrialstacking.cmd;
 
 import com.conorsmine.net.industrialstacking.IndustrialStacking;
-import com.conorsmine.net.industrialstacking.StackManager;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
@@ -35,7 +33,7 @@ public class ReloadAllCmd extends Cmd {
             pl.getStackManager().putAll(pl.getMachineSaveFile().mapDeserializedData());
         });
 
-        sender.sendMessage(String.format("%s§r§7§m     §r §eReload all §7§m     §r", pl.getPrefix()));
+        sender.sendMessage(String.format("%s§r§7§m-----§r §eReload all §7§m-----§r", pl.getPrefix()));
         pl.sendConfigFileInfo(sender);
         pl.sendSaveFileInfo(sender);
         pl.sendModConfigInfo(sender);
@@ -48,7 +46,7 @@ public class ReloadAllCmd extends Cmd {
     }
 
     @Override
-    String getUsage() {
+    public String getUsage() {
         return "§3/is reloadAll";
     }
 

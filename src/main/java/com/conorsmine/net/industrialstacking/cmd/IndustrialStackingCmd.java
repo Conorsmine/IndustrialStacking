@@ -15,6 +15,7 @@ public class IndustrialStackingCmd implements TabExecutor {
     public IndustrialStackingCmd(IndustrialStacking pl) {
         this.pl = pl;
 
+        subCommandMap.put("view", new MachineViewCmd(pl));
         subCommandMap.put("list", new MachineListCmd(pl));
 
         subCommandMap.put("reloadall", new ReloadAllCmd(pl));
@@ -42,7 +43,7 @@ public class IndustrialStackingCmd implements TabExecutor {
     }
 
     private void sendUsageMsg(CommandSender sender) {
-        sender.sendMessage(String.format("%s§r§7§m     §r §6§lUsage§r §7§m     §r", pl.getPrefix()));
+        sender.sendMessage(String.format("%s§r§7§m-----§r §6§lUsage§r §7§m-----§r", pl.getPrefix()));
         sender.sendMessage(String.format("%s§7Aliases: \"§3is§7\" or \"§3istk§7\".", pl.getPrefix()));
         sender.sendMessage(String.format("%s§7Sub-commands:§r", pl.getPrefix()));
 

@@ -2,6 +2,7 @@ package com.conorsmine.net.industrialstacking.cmd;
 
 import com.conorsmine.net.industrialstacking.IndustrialStacking;
 import com.conorsmine.net.industrialstacking.machinestack.MachineStack;
+import com.conorsmine.net.industrialstacking.machinestack.StackableMachines;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -15,6 +16,7 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("ALL")
 public class MachineListCmd extends Cmd {
 
     private static final String PERMISSION = "IndustrialStacking.listMachines";
@@ -24,19 +26,20 @@ public class MachineListCmd extends Cmd {
     }
 
     @Override
-    String getDescription() {
+    public String getDescription() {
         return "§7Lists all stacked machines";
     }
 
     @Override
-    String getUsage() {
-        return "§3/is list §7[§b<highest,lowest,exactAbsolute,exact,furthest,closest> <amount>§7]\n" +
+    public String getUsage() {
+        return "§3/is list §7[§b<highest,lowest,exactAbsolute,exact,furthest,closest,type> <amount>§7]\n" +
                 pl.getPrefix() + "    §7>> §bhighest§7: Sorts the list by the absolute stack amount.\n" +
                 pl.getPrefix() + "    §7>> §blowest§7: Sorts the list by the lowest absolute stack amount.\n" +
                 pl.getPrefix() + "    §7>> §bexactAbsolute§7: Filters the list for machine who have §3exactly§7 the stack amount specified by §b<amount>§7.\n" +
                 pl.getPrefix() + "    §7>> §bexact§7: Same as §bexact §7but, now only compares the actual, allowed, stack size.\n" +
                 pl.getPrefix() + "    §7>> §bfurthest§7: Sorts the list by the §3greatest§7 proximity to the player.\n" +
-                pl.getPrefix() + "    §7>> §bclosest§7: Sorts the list by the §3closest§7 proximity to the player.";
+                pl.getPrefix() + "    §7>> §bclosest§7: Sorts the list by the §3closest§7 proximity to the player.\n" +
+                pl.getPrefix() + "    §7>> §btype§7: Filters for machines of a specified type.";
     }
 
     @Override
@@ -49,7 +52,7 @@ public class MachineListCmd extends Cmd {
                 .sorted((o1, o2) -> getComparator(args, sender).compare(o1.getValue(), o2.getValue()))
                 .collect(Collectors.toList());
 
-        sender.sendMessage(String.format("%s§r§7§m     §r §eList §7§m     §r", pl.getPrefix()));
+        sender.sendMessage(String.format("%s§r§7§m-----§r §eList §7§m-----§r", pl.getPrefix()));
         sender.sendMessage(String.format("%s§7Note: Click on \"§3Here§7\" to teleport to the machine.", pl.getPrefix()));
         sender.sendMessage(String.format("%s§7Note: Depending on your scale, it might be that the click option was moved to the left or right.", pl.getPrefix()));
         for (int i = 0; i < sortedMachines.size(); i++) {
@@ -73,12 +76,24 @@ public class MachineListCmd extends Cmd {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        if (args.length == 3 && args[1].toLowerCase(Locale.ROOT).equals("type")) return Arrays.stream(StackableMachines.values()).map(StackableMachines::name).collect(Collectors.toList());
         if (args.length != 2) return null;
-        return new ArrayList<>(Arrays.asList("highest", "lowest", "exact", "exactAbsolute", "closest", "furthest"));
+        return new ArrayList<>(Arrays.asList("highest", "lowest", "exact", "exactAbsolute", "closest", "furthest", "type"));
     }
 
     private Predicate<MachineStack> getFilter(String[] args) {
         if (args.length < 3) return (x -> true);
+
+        final Set<String> machineEnumSet = Arrays.stream(StackableMachines.values()).map(StackableMachines::name).collect(Collectors.toSet());
+        if (args[1].toLowerCase(Locale.ROOT).equals("type")) {
+            final String typeName = args[2].toUpperCase(Locale.ROOT);
+            return (x -> {
+                if (!machineEnumSet.contains(typeName)) return false;
+                final StackableMachines machineEnum = StackableMachines.valueOf(typeName);
+                return x.getMachineEnum().equals(machineEnum);
+            });
+        }
+
         if (!args[2].matches("\\d+")) return (x -> true);
         int amount = Integer.parseInt(args[2]);
 
