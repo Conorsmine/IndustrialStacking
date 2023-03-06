@@ -74,6 +74,6 @@ compact_void_miner:
   # Insert here the difference between the item you get from breaking a stacked machine and what the id should be
   id_offset: 3907
 
-  # Each machine increases the amount of output by 1
+  # Increases the work speed.
   void miner:
     maxStackSize: -1
