@@ -1,10 +1,7 @@
 package com.conorsmine.net.industrialstacking;
 
 import com.conorsmine.net.industrialstacking.machinestack.MachineStack;
-import com.conorsmine.net.industrialstacking.machinestack.StackableMachines;
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -15,11 +12,8 @@ import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
-import java.util.Locale;
-import java.util.Objects;
 
 public class EvenListener implements Listener {
 

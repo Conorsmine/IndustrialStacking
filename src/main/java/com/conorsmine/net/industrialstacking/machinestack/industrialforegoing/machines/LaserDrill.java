@@ -5,12 +5,8 @@ import com.conorsmine.net.industrialstacking.machinestack.MachineStack;
 import com.conorsmine.net.industrialstacking.machinestack.Powerable;
 import com.conorsmine.net.industrialstacking.machinestack.StackableMachines;
 import com.conorsmine.net.industrialstacking.machinestack.industrialforegoing.ForegoingUtils;
-import de.tr7zw.nbtapi.NBTCompoundList;
-import de.tr7zw.nbtapi.iface.ReadWriteNBT;
 import org.bukkit.block.Block;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Set;
 
 public class LaserDrill extends MachineStack implements Powerable {
 

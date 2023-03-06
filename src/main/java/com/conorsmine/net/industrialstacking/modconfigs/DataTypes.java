@@ -11,6 +11,7 @@ public enum DataTypes {
      * @param line Line of the config file
      * @return True if the line starts with "I:" or "B:"
      */
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean isData(String line) {
         return line.matches("\\s*[I|B]:.*");
     }

@@ -4,8 +4,6 @@ import com.conorsmine.net.industrialstacking.IndustrialStacking;
 import com.conorsmine.net.industrialstacking.machinestack.StackableMachines;
 import com.conorsmine.net.industrialstacking.modconfigs.ConfigParser;
 import com.conorsmine.net.industrialstacking.modconfigs.DataTypes;
-import com.conorsmine.net.industrialstacking.modconfigs.industrialforegoing.ForegoingConfigData;
-import com.conorsmine.net.industrialstacking.modconfigs.industrialforegoing.ForegoingConfigParser;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -20,10 +18,9 @@ public class VoidMinerConfigParser implements ConfigParser<VoidMinerConfigData> 
 
     private static final String FILE_NAME = "compactvoidminers.cfg";
     private static final String[] CONFIG_SECTIONS = new String[] { "general" }; // Config sections to be parsed
-    private static final StackableMachines[] CONFIG_MACHINES = new StackableMachines[]
-            { StackableMachines.COMPACT_VOID_MINER };
 
     private final IndustrialStacking pl;
+    @SuppressWarnings("FieldMayBeFinal")
     private boolean isInstalled;
     private final Map<StackableMachines, VoidMinerConfigData> configDataMap = new HashMap<>();
 
@@ -34,6 +31,7 @@ public class VoidMinerConfigParser implements ConfigParser<VoidMinerConfigData> 
 
     @Override
     public void parse() {
+        if (!isInstalled) return;
         final File foregoingConfig = new File(pl.getModsConfigDir(), FILE_NAME);
 
         try {
@@ -80,11 +78,6 @@ public class VoidMinerConfigParser implements ConfigParser<VoidMinerConfigData> 
     @Override
     public Map<StackableMachines, VoidMinerConfigData> getConfigMap() {
         return configDataMap;
-    }
-
-    @Override
-    public StackableMachines[] getConfigMachines() {
-        return CONFIG_MACHINES;
     }
 
 

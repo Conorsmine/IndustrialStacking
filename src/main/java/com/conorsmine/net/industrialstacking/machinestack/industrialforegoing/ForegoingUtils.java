@@ -3,12 +3,10 @@ package com.conorsmine.net.industrialstacking.machinestack.industrialforegoing;
 import com.conorsmine.net.industrialstacking.IndustrialStacking;
 import com.conorsmine.net.industrialstacking.machinestack.MachineStack;
 import com.conorsmine.net.industrialstacking.machinestack.StackableMachines;
-import com.conorsmine.net.industrialstacking.modconfigs.ModConfigManager;
 import com.conorsmine.net.industrialstacking.modconfigs.industrialforegoing.ForegoingConfigData;
 import de.tr7zw.nbtapi.NBTCompoundList;
 import de.tr7zw.nbtapi.NBTTileEntity;
 import de.tr7zw.nbtapi.iface.ReadWriteNBT;
-import org.bukkit.block.Block;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;

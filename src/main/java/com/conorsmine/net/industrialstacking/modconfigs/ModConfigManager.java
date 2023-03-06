@@ -14,14 +14,10 @@ import java.util.Map;
  */
 public class ModConfigManager {
 
-    private final IndustrialStacking pl;
-
     private final ForegoingConfigParser foregoingConfigParser;
     private final VoidMinerConfigParser voidMinerConfigParser;
 
     public ModConfigManager(IndustrialStacking pl) {
-        this.pl = pl;
-
         this.foregoingConfigParser = new ForegoingConfigParser(pl);
         this.foregoingConfigParser.parse();
         this.voidMinerConfigParser = new VoidMinerConfigParser(pl);

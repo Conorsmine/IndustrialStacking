@@ -18,7 +18,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 @SuppressWarnings("unchecked")
 public class MachineSaveFile {
@@ -39,6 +42,7 @@ public class MachineSaveFile {
         if (file.exists()) return file;
 
         try {
+            //noinspection ResultOfMethodCallIgnored
             file.createNewFile();
             FileWriter writer = new FileWriter(file);
             writer.write("{}");
@@ -53,7 +57,7 @@ public class MachineSaveFile {
 
     private JSONObject parseFile(File file) {
         JSONParser parser = new JSONParser();
-        FileReader reader = null;
+        FileReader reader;
         try {
             reader = new FileReader(file);
             return (JSONObject) parser.parse(reader);
@@ -88,7 +92,7 @@ public class MachineSaveFile {
             if (material == null) continue;
 
             final List<MachineSaveWrapper> machines = new LinkedList<>();
-            final JSONArray machineTypeArr = (JSONArray) jsonFile.get(((String) o));
+            final JSONArray machineTypeArr = (JSONArray) jsonFile.get((o));
 
             for (Object o1 : machineTypeArr)
                 machines.add(new MachineSaveWrapper(((JSONObject) o1)));

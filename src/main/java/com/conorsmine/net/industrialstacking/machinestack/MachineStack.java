@@ -110,6 +110,7 @@ public abstract class MachineStack {
     /**
      * @return The amount of items that should be returned when the block breaks or explodes.
      */
+    @SuppressWarnings("deprecation")
     public ItemStack getMachineItemStack() {
         final int idOffset = pl.getMachineConfigFile().getIdOffsetMap().getOrDefault(machineEnum.getModFromMachine(), 0);
         final int machineId = machineType.getId() + idOffset;

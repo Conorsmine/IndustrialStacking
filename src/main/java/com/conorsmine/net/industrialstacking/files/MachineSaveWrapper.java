@@ -1,6 +1,5 @@
 package com.conorsmine.net.industrialstacking.files;
 
-import com.conorsmine.net.industrialstacking.machinestack.MachineStack;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.json.simple.JSONObject;
@@ -9,11 +8,6 @@ public class MachineSaveWrapper {
 
     private final Location machineLocation;
     private final int machineStackSize;
-
-    MachineSaveWrapper(final MachineStack machineStack) {
-        this.machineLocation = machineStack.getBlock().getLocation();
-        this.machineStackSize = machineStack.getStackAmount();
-    }
 
     MachineSaveWrapper(final JSONObject machineJson) {
         final JSONObject locationJson = (JSONObject) machineJson.get("Location");

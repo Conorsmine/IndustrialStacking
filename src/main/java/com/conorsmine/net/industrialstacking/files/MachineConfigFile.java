@@ -7,7 +7,6 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class MachineConfigFile {
 

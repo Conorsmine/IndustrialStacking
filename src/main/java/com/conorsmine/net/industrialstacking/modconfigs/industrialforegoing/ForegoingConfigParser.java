@@ -1,11 +1,14 @@
 package com.conorsmine.net.industrialstacking.modconfigs.industrialforegoing;
 
 import com.conorsmine.net.industrialstacking.IndustrialStacking;
-import com.conorsmine.net.industrialstacking.modconfigs.ConfigParser;
 import com.conorsmine.net.industrialstacking.machinestack.StackableMachines;
+import com.conorsmine.net.industrialstacking.modconfigs.ConfigParser;
 import com.conorsmine.net.industrialstacking.modconfigs.DataTypes;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +25,7 @@ public class ForegoingConfigParser implements ConfigParser<ForegoingConfigData> 
                     StackableMachines.RESOURCE_FISHER, StackableMachines.POTION_BREWER };
 
     private final IndustrialStacking pl;
+    @SuppressWarnings("FieldMayBeFinal")
     private boolean isInstalled;
     private final Map<StackableMachines, ForegoingConfigData> configDataMap = new HashMap<>();
 
@@ -90,11 +94,6 @@ public class ForegoingConfigParser implements ConfigParser<ForegoingConfigData> 
     @Override
     public Map<StackableMachines, ForegoingConfigData> getConfigMap() {
         return configDataMap;
-    }
-
-    @Override
-    public StackableMachines[] getConfigMachines() {
-        return CONFIG_MACHINES;
     }
 
     @Override

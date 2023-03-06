@@ -150,11 +150,4 @@ public enum StackableMachines {
     public static Map<StackableMods, StackableMachines[]> getModMachines() {
         return modMachines;
     }
-
-    /**
-     * @return The {@link StackableMods} for this machine.
-     */
-    public static StackableMods getModFromMachine(StackableMachines machine) {
-        return machine.getModFromMachine();
-    }
 }
