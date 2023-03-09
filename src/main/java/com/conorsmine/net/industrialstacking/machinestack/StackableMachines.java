@@ -25,6 +25,8 @@ public enum StackableMachines {
     MOB_DUPLICATOR              (Material.valueOf("INDUSTRIALFOREGOING_MOB_DUPLICATOR"), MobDuplicator.class, "mob_duplicator"),
     RESOURCE_FISHER             (Material.valueOf("INDUSTRIALFOREGOING_WATER_RESOURCES_COLLECTOR"), ResourceFisher.class, "water_resources_collector"),
     POTION_BREWER               (Material.valueOf("INDUSTRIALFOREGOING_POTION_ENERVATOR"), PotionBrewer.class, "potion_enervator"),
+    PLANT_GATHERER              (Material.valueOf("INDUSTRIALFOREGOING_CROP_RECOLECTOR"), PlantGatherer.class, "crop_recolector"),
+    PLANT_SOWER                 (Material.valueOf("INDUSTRIALFOREGOING_CROP_SOWER"), PlantSower.class, "crop_sower"),
 
     // Compact void miner
     COMPACT_VOID_MINER          (Material.valueOf("COMPACTVOIDMINERS_VOID_MINER"), CompactVoidMiner.class, "void miner")
@@ -36,17 +38,21 @@ public enum StackableMachines {
     private static final Map<StackableMods, StackableMachines[]> modMachines = new HashMap<>();
     private static final Set<String> matNameSet = new HashSet<>();  // A set to quickly check if a material is registered
     static {
+        // create matName set
         for (StackableMachines stackableMachine : values()) {
             matMap.put(stackableMachine.material, stackableMachine);
             matNameSet.add(stackableMachine.material.name().toUpperCase(Locale.ROOT));
         }
 
-        modMachines.put(StackableMods.INDUSTRIAL_FOREGOING, new StackableMachines[]
-                {LASER_DRILL, LASER_BASE, HYDRATOR, VILLAGER_TRADE_EXCHANGER, RESOURCEFUL_FURNACE,
-                        MATERIAL_STONEWORK_FACTORY, ANIMAL_SEWER, TREE_FLUID_EXTRACTOR, MOB_DUPLICATOR,
-                        RESOURCE_FISHER, POTION_BREWER });
+        // create modMachines map
+        for (StackableMods mod : StackableMods.values()) {
+            final List<StackableMachines> modMachinesList = new LinkedList<>();
+            for (StackableMachines machine : values()) {
+                if (machine.getMaterial().name().startsWith(mod.getModPrefix())) modMachinesList.add(machine);
+            }
 
-        modMachines.put(StackableMods.COMPACT_VOID_MINER, new StackableMachines[] { COMPACT_VOID_MINER });
+            modMachines.put(mod, modMachinesList.toArray(new StackableMachines[0]));
+        }
     }
 
     /**

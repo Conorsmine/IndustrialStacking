@@ -68,6 +68,15 @@ industrial_foregoing:
   potion_enervator:
     maxStackSize: -1
 
+  # Plant gatherer
+  # Increases the work speed.
+  crop_recolector:
+    maxStackSize: -1
+
+  # Plant sower
+  # Increases the work speed.
+  crop_sower:
+    maxStackSize: -1
 
 compact_void_miner:
   # Depending on the amount of mods, the id of an item changes
