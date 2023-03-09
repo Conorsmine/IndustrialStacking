@@ -6,6 +6,7 @@ depend: [NBTAPI]
 api-version: 1.12
 
 commands:
+  # Main cmd
   industrialStacking:
     description: Main command for the plugin.
     aliases: [is, istk]
@@ -14,12 +15,20 @@ permissions:
   IndustrialStacking.*:
     description: Adming permission for all commands.
 
+  # Profiler
+  IndIndustrialStacking.profiler:
+    description: Shows the performance of machines.
+
+  # Info
+  IndIndustrialStacking.info:
+    description: View information about certain configs. Identical to the display of the /is reload commands, just without reloading.
+
   # View
-  IndsutrialStacking.viewMachines:
+  IndustrialStacking.viewMachines:
     description: Adds a border around or stacked machines in the users vicinity.
 
   # List
-  IndsutrialStacking.listMachines:
+  IndustrialStacking.listMachines:
     description: Lists all stacked machines.
 
   # Find
