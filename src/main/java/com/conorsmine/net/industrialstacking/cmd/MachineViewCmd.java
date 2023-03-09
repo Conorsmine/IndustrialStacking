@@ -39,7 +39,7 @@ public class MachineViewCmd extends Cmd {
 
     @Override
     public String getUsage() {
-        return "§3/is view §7[§b<duration is seconds, clear>§7]\n" +
+        return "§3/is view §7[§b<durationSeconds, clear>§7]\n" +
                 pl.getPrefix() + "    §7>> §bclear§7: Removes all §chighlighting §7from stacked machines.";
     }
 
@@ -47,7 +47,7 @@ public class MachineViewCmd extends Cmd {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!sender.hasPermission(PERMISSION)) { nonPermissionMsg(sender, PERMISSION); return false; }
 
-        sender.sendMessage(String.format("%s§r§7§m-----§r §eView §7§m-----§r", pl.getPrefix()));
+        sender.sendMessage(String.format(getCmdHeader(), "View"));
         if (args.length >= 2 && args[1].toLowerCase(Locale.ROOT).equals("clear"))
             runClearCommand(sender);
         else {

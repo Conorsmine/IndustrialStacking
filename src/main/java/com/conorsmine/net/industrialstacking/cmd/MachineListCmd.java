@@ -52,7 +52,7 @@ public class MachineListCmd extends Cmd {
                 .sorted((o1, o2) -> getComparator(args, sender).compare(o1.getValue(), o2.getValue()))
                 .collect(Collectors.toList());
 
-        sender.sendMessage(String.format("%s§r§7§m-----§r §eList §7§m-----§r", pl.getPrefix()));
+        sender.sendMessage(String.format(getCmdHeader(), "List"));
         sender.sendMessage(String.format("%s§7Note: Click on \"§3Here§7\" to teleport to the machine.", pl.getPrefix()));
         sender.sendMessage(String.format("%s§7Note: Depending on your scale, it might be that the click option was moved to the left or right.", pl.getPrefix()));
         for (int i = 0; i < sortedMachines.size(); i++) {

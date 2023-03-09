@@ -16,6 +16,10 @@ public abstract class Cmd implements TabExecutor {
 
     public abstract String getUsage();
 
+    public String getCmdHeader() {
+        return pl.getPrefix() + "§r§7§m-----§r §e%s §7§m-----§r";
+    }
+
     public void nonPermissionMsg(CommandSender sender, String permission) {
         sender.sendMessage(String.format("%s§cYou do not have permission to run that command!§r", pl.getPrefix()));
         sender.sendMessage(String.format("%s§7Required permission node: §3%s§7.", pl.getPrefix(), permission));
