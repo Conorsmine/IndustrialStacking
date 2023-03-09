@@ -3,10 +3,7 @@ package com.conorsmine.net.industrialstacking.machinestack;
 public interface Powerable {
 
     /**
-     * To increase the machines speed, change the amount of energy the machine
-     * can input. To calculate it correctly though, a value is needed, before
-     * all other machines increase the power input.
-     * @return Power input, before recalculation
+     * @return The power required for one machine with the given upgrades.
      */
     long getRegularMachinePower();
 

@@ -41,8 +41,7 @@ public final class IndustrialStacking extends JavaPlugin {
 
         consoleSender.sendMessage(getPrefix());
         consoleSender.sendMessage(String.format("%s§7Enabling §6machine stack manager§7...", getPrefix()));
-        stackManager = new StackManager(this);
-        stackManager.putAll(machineSaveFile.mapDeserializedData());
+        stackManager = new StackManager(this).initManager();
         getServer().getPluginManager().registerEvents(new EvenListener(this), this);
         getCommand("industrialStacking").setExecutor(mainCommand);
 
@@ -91,7 +90,7 @@ public final class IndustrialStacking extends JavaPlugin {
         runConfigFileInfo(sender);
     }
 
-    private void runConfigFileInfo(CommandSender sender) {
+    public void runConfigFileInfo(CommandSender sender) {
         Iterator<StackableMods> configIterator = machineConfigFile.getIdOffsetMap().keySet().iterator();
         while (configIterator.hasNext()) {
             StackableMods mods = configIterator.next();
@@ -114,7 +113,7 @@ public final class IndustrialStacking extends JavaPlugin {
         runSaveFileInfo(sender);
     }
 
-    private void runSaveFileInfo(CommandSender sender) {
+    public void runSaveFileInfo(CommandSender sender) {
         int total = 0;
         for (Map.Entry<Material, List<MachineSaveWrapper>> entry : machineSaveFile.deserialize().entrySet()) {
             int size = entry.getValue().size();
@@ -131,7 +130,7 @@ public final class IndustrialStacking extends JavaPlugin {
         runModConfigInfo(sender);
     }
 
-    private void runModConfigInfo(CommandSender sender) {
+    public void runModConfigInfo(CommandSender sender) {
         boolean isPlayer = (sender instanceof Player);
         boolean ifLoaded = modConfigManager.getForegoingConfigParser().isInstalled();
         boolean minerLoaded = modConfigManager.getVoidMinerConfigParser().isInstalled();

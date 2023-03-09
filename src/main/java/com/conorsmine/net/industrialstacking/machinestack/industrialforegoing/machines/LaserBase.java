@@ -13,13 +13,14 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class LaserBase extends MachineStack {
 
     private ItemStack[] baseInvPrev;
-    private boolean itemLock = false;   // boolean used to ensure, that the base only increases output once
+    private boolean addNextTick = false;    // boolean used to represent the machine ticking over from 99 to 0
 
     public LaserBase(@NotNull IndustrialStacking plugin, @NotNull Block tileEntity) {
         super(plugin, tileEntity, StackableMachines.LASER_BASE);
@@ -29,12 +30,15 @@ public class LaserBase extends MachineStack {
     @Override
     public void tickMachine() {
         final long currentWork = this.getMachineTile().getLong("currentWork");
-        if (currentWork <= 2 || currentWork >= 12) { itemLock = false; return; }
-        if (itemLock) return;
-        itemLock = true;
-        final ItemStack[] baseInvCurrent = getBaseItems();
-        addItemToLaserBase(baseInvCurrent);
-        baseInvPrev = baseInvCurrent.clone();
+        if (currentWork == 99) {
+            baseInvPrev = getBaseItems();
+            addNextTick = true;
+        }
+
+        if (currentWork == 0 && addNextTick) {
+            addNextTick = false;
+            addItemToLaserBase(getBaseItems());
+        }
     }
 
     private ItemStack[] getBaseItems() {

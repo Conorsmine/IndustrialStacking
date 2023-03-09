@@ -2,6 +2,7 @@ package com.conorsmine.net.industrialstacking.modconfigs.industrialforegoing;
 
 import com.conorsmine.net.industrialstacking.IndustrialStacking;
 import com.conorsmine.net.industrialstacking.machinestack.StackableMachines;
+import com.conorsmine.net.industrialstacking.machinestack.StackableMods;
 import com.conorsmine.net.industrialstacking.modconfigs.ConfigParser;
 import com.conorsmine.net.industrialstacking.modconfigs.DataTypes;
 
@@ -17,12 +18,8 @@ import java.util.stream.Collectors;
 public class ForegoingConfigParser implements ConfigParser<ForegoingConfigData> {
 
     private static final String FILE_NAME = "industrialforegoing.cfg";
-    private static final StackableMachines[] CONFIG_MACHINES = new StackableMachines[]
-            { StackableMachines.LASER_DRILL, StackableMachines.LASER_BASE, StackableMachines.HYDRATOR,
-                    StackableMachines.VILLAGER_TRADE_EXCHANGER, StackableMachines.RESOURCEFUL_FURNACE,
-                    StackableMachines.MATERIAL_STONEWORK_FACTORY, StackableMachines.ANIMAL_SEWER,
-                    StackableMachines.TREE_FLUID_EXTRACTOR, StackableMachines.MOB_DUPLICATOR,
-                    StackableMachines.RESOURCE_FISHER, StackableMachines.POTION_BREWER };
+    private static final StackableMachines[] CONFIG_MACHINES = StackableMachines.getModMachines()
+            .getOrDefault(StackableMods.INDUSTRIAL_FOREGOING, new StackableMachines[0]);
 
     private final IndustrialStacking pl;
     @SuppressWarnings("FieldMayBeFinal")
