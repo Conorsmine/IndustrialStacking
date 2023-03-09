@@ -21,7 +21,9 @@ of the broken block.
 IndustrialStacking provides many *quality of life* features and configurations, such as:
 - **Max stack sizes**: Each machine has a `maxStackSize` value attributed in the `config.yml`.
 It determines the highest amount a machine can be stacked too. Set to 0 to disable stacking for this machine type.
-- **Info**: The `reload` commands provide a great amount of information about the inner workings of the plugin.
+- **Info**: The `info` commands provides a great amount of information about the inner workings of the plugin.
+- **Reload**: Use the `reload` commands to apply any changes on the fly.
 - **Highlighting**: The `view` command provides highlighting of stacked machines in crowded areas.
 - **Listing**: The `list` commands provide many useful options to query for stacked machines.
 - **Removal**: Removal of a stacked machine can either be achieved by breaking the machine block *or* by shifting left-clicking the block with an empty hand.
+- **Profiler**: The `profiler` command shows where issues may lay and causing lag in your world. Report any issues that may arise.
