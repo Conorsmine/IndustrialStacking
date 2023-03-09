@@ -6,18 +6,32 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 
-import java.util.Queue;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 public final class StackManager extends ConcurrentHashMap<Location, MachineStack> {
 
     private final IndustrialStacking pl;
-    private final Queue<Runnable> afterWork = new ConcurrentLinkedQueue<>(); // A queue for actions to be performed after the next iteration of machine
+    private boolean shouldReload = false;
+    private StackProfiler profiler;
 
     StackManager(IndustrialStacking pl) {
         this.pl = pl;
         startTicker();
+    }
+
+    public StackManager initManager() {
+        clear();
+        putAll(pl.getMachineSaveFile().mapDeserializedData());
+        shouldReload = false;
+        return this;
+    }
+
+    public void queueReload() {
+        shouldReload = true;
     }
 
     private void startTicker() {
@@ -34,13 +48,15 @@ public final class StackManager extends ConcurrentHashMap<Location, MachineStack
             final Location machineLoc = mapEntries.getKey();
 
             if (!isValidBlock(machineStack, machineLoc)) { machineStack.removeMachineStack(); continue; }
+            long nanoTimeStart = System.nanoTime();
             machineStack.tick();
+            if (profiler != null) profiler.addNanoTime(machineStack, (System.nanoTime() - nanoTimeStart));
         }
 
-        if (afterWork.size() > 0) {
-            afterWork.element().run();
-            afterWork.remove();
-        }
+        if (shouldReload)
+            initManager();
+
+        if (profiler != null && profiler.tick()) profiler = null;
     }
 
     private boolean isValidBlock(MachineStack machineStack, Location machineLocation) {
@@ -50,7 +66,7 @@ public final class StackManager extends ConcurrentHashMap<Location, MachineStack
         return true;
     }
 
-    public void addToActionQueue(Runnable action) {
-        afterWork.add(action);
+    void setProfiler(StackProfiler profiler) {
+        this.profiler = profiler;
     }
 }
