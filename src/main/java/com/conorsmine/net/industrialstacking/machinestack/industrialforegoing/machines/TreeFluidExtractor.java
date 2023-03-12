@@ -22,6 +22,7 @@ public class TreeFluidExtractor extends MachineStack {
     private static final double BREAK_CHANCE = 0.005d;
 
     private byte workTick = 0;
+    private int additive = 0;   // The amount of latex to be added
 
     public TreeFluidExtractor(@NotNull IndustrialStacking plugin, @NotNull Block tileEntity) {
         super(plugin, tileEntity, StackableMachines.TREE_FLUID_EXTRACTOR);
@@ -30,8 +31,10 @@ public class TreeFluidExtractor extends MachineStack {
     @Override
     public void tickMachine() {
         workTick++;
-        int fluidAmount = getFluidTankNBT().getInteger("Amount");
-        if (fluidAmount >= 8000) { getFluidTankNBT().setInteger("Amount", 8000); return; }
+        NBTCompound fluidTankNBT = getFluidTankNBT();
+        int fluidAmount = fluidTankNBT.getInteger("Amount");
+        if (fluidAmount == 8000) return;
+        if (fluidAmount > 8000) { fluidTankNBT.setInteger("Amount", 8000); return; }
         if ((workTick % TICK_RATE) != 0) return;
         workTick = 0;
         final Block logBlock = getLogBlock();
@@ -41,18 +44,18 @@ public class TreeFluidExtractor extends MachineStack {
         final Location logLoc = logBlock.getLocation();
         int logHash = logLoc.hashCode();
         Byte logProgress = PROGRESS_MAP.getOrDefault(logHash, ((byte) 0));
+        additive += getStackAmount();
 
-        for (int i = 0; i < getStackAmount(); i++) {
-            if (rand.nextDouble() <= BREAK_CHANCE) {
-                logProgress++;
-                if (manageLogBreaking(logBlock, logProgress)) return;
-            }
+        final double stackBreakChance = (BREAK_CHANCE * getStackAmount());
+        if (!(rand.nextDouble() <= stackBreakChance)) return;       // No log break progression
 
-            fluidAmount++;
-            getFluidTankNBT().setInteger("Amount", fluidAmount);
-        }
+        PROGRESS_MAP.put(logHash, ++logProgress);
+        if (!manageLogBreaking(logBlock, logProgress)) return;    // Log wasn't broken
 
-        PROGRESS_MAP.put(logHash, logProgress);
+        // Log was broken, add all latex at once
+        if (fluidTankNBT.hasTag("Empty")) { fluidTankNBT.removeKey("Empty"); fluidTankNBT.setString("FluidName", "latex"); }
+        fluidTankNBT.setInteger("Amount", Math.min((fluidAmount + additive), 8000));
+        additive = 0;
     }
 
     private NBTCompound getFluidTankNBT() {

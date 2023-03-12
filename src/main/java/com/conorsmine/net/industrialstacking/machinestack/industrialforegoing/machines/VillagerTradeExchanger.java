@@ -25,6 +25,7 @@ public class VillagerTradeExchanger extends MachineStack implements Powerable {
 
     @Override
     public void tickMachine() {
+        if (getMachineTile().getLong("TeslaPower") == 0L || getMachineTile().getBoolean("paused")) return;
         getMachineTile().getCompound("work_energy").setLong("TeslaInput", getMachineStackPower());
     }
 }
