@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public class HiddenTeleportCmd extends Cmd {
 
-    private static final String PERMISSION = "IndIndustrialStacking.profiler";
+    private static final String PERMISSION = ProfilerCmd.PERMISSION;
 
     public HiddenTeleportCmd(IndustrialStacking pl) {
         super(pl);

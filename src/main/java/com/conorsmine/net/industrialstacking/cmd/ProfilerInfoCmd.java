@@ -1,12 +1,10 @@
 package com.conorsmine.net.industrialstacking.cmd;
 
 import com.conorsmine.net.industrialstacking.IndustrialStacking;
-import com.conorsmine.net.industrialstacking.StackProfiler;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 public class ProfilerInfoCmd extends Cmd {
 

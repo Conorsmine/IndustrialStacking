@@ -26,7 +26,7 @@ import java.util.stream.Stream;
 
 public class ProfilerCmd extends Cmd {
 
-    private static final String PERMISSION = "IndIndustrialStacking.profiler";
+    protected static final String PERMISSION = "IndIndustrialStacking.profiler";
 
     public ProfilerCmd(IndustrialStacking pl) {
         super(pl);
@@ -56,11 +56,18 @@ public class ProfilerCmd extends Cmd {
         completableProfiler.whenComplete((p, exc) -> {
             final List<Map.Entry<MachineStack, List<Long>>> list = processCommandTags(commandTagArgs, p, sender).collect(Collectors.toList());
             final double totalMillis = nanoTimeToMillis(getAbsoluteTimeNano(list));
+            final double totalMillisPerTick = totalMillis / p.getTickDuration();
+            final BaseComponent[] v = formatData(list, p.getTickDuration());
 
             sender.sendMessage(String.format("%s§eResults:", pl.getPrefix()));
             sender.sendMessage(String.format("%s§7Processing time: §3%,.3fms§7; §3%,.3fms§7 per tick; §3%,.3f%% §7of this tick.",
-                    pl.getPrefix(), totalMillis, (totalMillis / p.getTickDuration()), (totalMillis / 50)));
-            sender.spigot().sendMessage(formatData(list, p.getTickDuration()));
+                    pl.getPrefix(), totalMillis, totalMillisPerTick, ((totalMillisPerTick / 50) * 100)));
+
+            for (int i = 0; i < Math.floor(((double) v.length) / 6); i++) {
+                int j = i * 6;
+                final BaseComponent[] msg = new BaseComponent[] { v[j], v[++j], v[++j], v[++j], v[++j], v[++j] };
+                sender.spigot().sendMessage(msg);
+            }
         });
         return true;
     }
@@ -161,8 +168,16 @@ public class ProfilerCmd extends Cmd {
             LocalDateTime now = LocalDateTime.now();
 
             fos.write(String.format("---------------[ %s ]---------------%n", dtf.format(now)).getBytes());
-            for (BaseComponent comp : formatData(collect, result.getTickDuration()))
-                fos.write(comp.toPlainText().replaceAll("§.", "").getBytes());
+            final BaseComponent[] v = formatData(collect, result.getTickDuration());
+            for (int i = 0; i < Math.floor(((double) v.length) / 6); i++) {
+                int j = i * 6;
+                final StringBuilder b = new StringBuilder();
+                b.append(v[j].toPlainText()).append(v[++j].toPlainText()).append(v[++j].toPlainText())
+                        .append(v[++j].toPlainText()).append(v[++j].toPlainText()).append(v[++j].toPlainText()).append("\n");
+
+
+                fos.write(b.toString().replaceAll("§.", "").getBytes());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -241,7 +256,7 @@ public class ProfilerCmd extends Cmd {
         final ComponentBuilder builder = new ComponentBuilder("");
         final TextComponent clearEvents = new TextComponent();
         clearEvents.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, null));
-        clearEvents.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.youtube.com/watch?v=dQw4w9WgXcQ"));
+        clearEvents.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, null));
 
         for (Map.Entry<MachineStack, List<Long>> entry : list) {
             builder.append(String.format("%s§3%s ", pl.getPrefix(), entry.getKey().getMachineEnum()));
@@ -260,7 +275,7 @@ public class ProfilerCmd extends Cmd {
             final long highest = entry.getValue().stream().max((o1, o2) -> (o1 >= o2) ? 1 : -1).orElse(0L);
             final long lowest =  entry.getValue().stream().min((o1, o2) -> (o1 >= o2) ? 1 : -1).orElse(0L);
 
-            final TextComponent averageText = new TextComponent(String.format("§3%,.3fms§7 per tick§r\n", getAverageMillis(entry.getValue(), duration)));
+            final TextComponent averageText = new TextComponent(String.format("§3%,.3fms§7 per tick§r", getAverageMillis(entry.getValue(), duration)));
             averageText.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                     new ComponentBuilder(String.format("§e%,.3fms §7- §e%,.3fms§7 per tick§r", nanoTimeToMillis(highest), nanoTimeToMillis(lowest))).create()));
             builder.append(averageText);
