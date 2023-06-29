@@ -2,7 +2,7 @@ name: IndustrialStacking
 version: '${project.version}'
 main: com.conorsmine.net.industrialstacking.IndustrialStacking
 author: Conorsmine
-depend: [NBTAPI]
+#depend: [NBTAPI]
 api-version: 1.12
 
 commands:

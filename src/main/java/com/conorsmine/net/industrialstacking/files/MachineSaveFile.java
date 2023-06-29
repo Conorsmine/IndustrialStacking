@@ -113,6 +113,7 @@ public class MachineSaveFile {
 
             for (MachineSaveWrapper saveWrapper : machineSaveWrappers) {
                 final Location machineLocation = saveWrapper.getMachineLocation();
+                if (machineLocation.getWorld() == null) continue;
 
                 final MachineStack machineStack = getMachineStack(machineLocation, material, saveWrapper.getMachineStackSize());
                 if (machineStack == null) { pl.getMachineSaveFile().removeMachineStack(machineLocation); continue; }

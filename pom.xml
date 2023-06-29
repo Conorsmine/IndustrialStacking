@@ -6,7 +6,7 @@
 
     <groupId>com.Conorsmine.net</groupId>
     <artifactId>IndustrialStacking</artifactId>
-    <version>1.1a</version>
+    <version>1.1c</version>
     <packaging>jar</packaging>
 
     <name>IndustrialStacking</name>
@@ -39,8 +39,8 @@
                         </goals>
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <outputDirectory>C:\Users\Conor\Desktop\Desktop\Minecraft Stuff\1.12.2 Magma\plugins</outputDirectory>
-                            <finalName>IndustrialStacking</finalName>
+                            <outputDirectory>C:\Users\Conor\Desktop\Desktop\Minecraft_Stuff\1.12.2_mc_server\plugins</outputDirectory>
+                            <finalName>IndustrialStacking-v${version}</finalName>
                         </configuration>
                     </execution>
                 </executions>

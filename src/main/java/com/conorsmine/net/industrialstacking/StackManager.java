@@ -16,7 +16,6 @@ public final class StackManager extends ConcurrentHashMap<Location, MachineStack
 
     private final IndustrialStacking pl;
     private boolean shouldReload = false;
-    private StackProfiler profiler;
 
     StackManager(IndustrialStacking pl) {
         this.pl = pl;
@@ -47,16 +46,13 @@ public final class StackManager extends ConcurrentHashMap<Location, MachineStack
             final MachineStack machineStack = mapEntries.getValue();
             final Location machineLoc = mapEntries.getKey();
 
+            if (!machineLoc.getChunk().isLoaded()) continue;
             if (!isValidBlock(machineStack, machineLoc)) { machineStack.removeMachineStack(); continue; }
-            long nanoTimeStart = System.nanoTime();
             machineStack.tick();
-            if (profiler != null) profiler.addNanoTime(machineStack, (System.nanoTime() - nanoTimeStart));
         }
 
         if (shouldReload)
             initManager();
-
-        if (profiler != null && profiler.tick()) profiler = null;
     }
 
     private boolean isValidBlock(MachineStack machineStack, Location machineLocation) {
@@ -64,9 +60,5 @@ public final class StackManager extends ConcurrentHashMap<Location, MachineStack
         if (machineStack == null || machineStack.getMachineTile() == null) return false;
         if (block == null || block.getType() != machineStack.getMachineType()) return false;
         return true;
-    }
-
-    void setProfiler(StackProfiler profiler) {
-        this.profiler = profiler;
     }
 }

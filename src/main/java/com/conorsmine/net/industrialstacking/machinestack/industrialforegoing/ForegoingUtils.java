@@ -4,6 +4,7 @@ import com.conorsmine.net.industrialstacking.IndustrialStacking;
 import com.conorsmine.net.industrialstacking.machinestack.MachineStack;
 import com.conorsmine.net.industrialstacking.machinestack.StackableMachines;
 import com.conorsmine.net.industrialstacking.modconfigs.industrialforegoing.ForegoingConfigData;
+import de.tr7zw.nbtapi.NBTCompound;
 import de.tr7zw.nbtapi.NBTCompoundList;
 import de.tr7zw.nbtapi.NBTTileEntity;
 import de.tr7zw.nbtapi.iface.ReadWriteNBT;
@@ -15,7 +16,16 @@ import java.util.Set;
 
 public class ForegoingUtils {
 
-
+    /**
+     * @param machineNBT The {@link NBTTileEntity} of the machine stack.
+     * @return The amount of power currently stored in the machine.
+     */
+    public static long getCurrentMachinePower(@NotNull final NBTTileEntity machineNBT) {
+        final NBTCompound workEnergy = machineNBT.getCompound("work_energy");
+        if (workEnergy == null) return 0L;
+        final Long teslaPower = workEnergy.getLong("TeslaPower");
+        return (teslaPower == null) ? 0L : teslaPower;
+    }
 
     /**
      * @param machineNBT The {@link NBTTileEntity} of the machine stack.

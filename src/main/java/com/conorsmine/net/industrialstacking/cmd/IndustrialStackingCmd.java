@@ -15,9 +15,6 @@ public class IndustrialStackingCmd implements TabExecutor {
     public IndustrialStackingCmd(IndustrialStacking pl) {
         this.pl = pl;
 
-        subCommandMap.put("hidtp", new HiddenTeleportCmd(pl));
-        subCommandMap.put("profiler", new ProfilerCmd(pl));
-        subCommandMap.put("profilerinfo", new ProfilerInfoCmd(pl));
         subCommandMap.put("info", new InfoCmd(pl));
         subCommandMap.put("view", new MachineViewCmd(pl));
         subCommandMap.put("list", new MachineListCmd(pl));

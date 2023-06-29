@@ -11,4 +11,9 @@ public interface Powerable {
      * @return The amount of power required by the machine stack.
      */
     long getMachineStackPower();
+
+    /**
+     * @return The amount of power currently stored in the machine.
+     */
+    long getCurrentMachinePower();
 }
