@@ -26,4 +26,3 @@ It determines the highest amount a machine can be stacked too. Set to 0 to disab
 - **Highlighting**: The `view` command provides highlighting of stacked machines in crowded areas.
 - **Listing**: The `list` commands provide many useful options to query for stacked machines.
 - **Removal**: Removal of a stacked machine can either be achieved by breaking the machine block *or* by shifting left-clicking the block with an empty hand.
-- **Profiler**: The `profiler` command shows where issues may lay and causing lag in your world. Report any issues that may arise.
